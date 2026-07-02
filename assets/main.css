@@ -109,9 +109,13 @@ input {
   from { transform: translateY(8px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .animate-spin { animation: spin 1s linear infinite; }
-.animate-fade-in { animation: fade-in 0.2s ease-out; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
 .animate-slide-in { animation: slide-in-from-bottom 0.2s ease-out; }
 
 /* Layout */
@@ -268,6 +272,7 @@ h4, .h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; l
 .text-carbs { color: var(--color-carbs); }
 .text-fat { color: var(--color-fat); }
 .text-fiber { color: var(--color-fiber); }
+.text-surface-tertiary { color: var(--color-surface-tertiary); }
 
 /* Colors - background */
 .bg-card { background: var(--color-card); }
@@ -281,13 +286,13 @@ h4, .h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; l
 .bg-fat { background: var(--color-fat); }
 .bg-fiber { background: var(--color-fiber); }
 
-.bg-primary-10 { background: rgba(217, 119, 87, 0.1); }
+.bg-primary-10 { background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
 .bg-protein-10 { background: rgba(59, 130, 246, 0.1); }
 .bg-carbs-10 { background: rgba(245, 158, 11, 0.1); }
 .bg-fat-10 { background: rgba(244, 63, 94, 0.1); }
 .bg-fiber-10 { background: rgba(139, 92, 246, 0.1); }
 .bg-black-40 { background: rgba(0, 0, 0, 0.4); }
-.bg-red-50 { background: #fef2f2; }
+.bg-red-50 { background: color-mix(in srgb, var(--color-destructive) 10%, transparent); }
 
 /* Borders */
 .border { border: 1px solid var(--color-border); }
@@ -325,8 +330,8 @@ h4, .h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; l
 .-rotate-90 { transform: rotate(-90deg); }
 
 /* Shadow */
-.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04); }
+.shadow-lg { box-shadow: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 10px -2px rgba(0,0,0,0.04); }
 
 /* Transitions */
 .transition-all { transition: all 0.2s ease; }
@@ -343,15 +348,14 @@ h4, .h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; l
 .cursor-pointer { cursor: pointer; }
 
 /* Misc */
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
 
 /* Hover states */
 .hover-bg-muted:hover { background: var(--color-muted); }
 .hover-bg-primary-dark:hover { background: var(--color-primary-dark); }
-.hover-bg-red-50:hover { background: #fef2f2; }
+.hover-bg-red-50:hover { background: color-mix(in srgb, var(--color-destructive) 10%, transparent); }
 .hover-text-foreground:hover { color: var(--color-foreground); }
 .hover-text-primary:hover { color: var(--color-primary); }
-.hover-text-red-500:hover { color: #ef4444; }
+.hover-text-red-500:hover { color: var(--color-destructive); }
 .hover-shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
 .hover--translate-y-0_5:hover { transform: translateY(-2px); }
 
@@ -368,7 +372,10 @@ a:focus-visible {
   outline-offset: 2px;
 }
 .focus-outline-none:focus { outline: none; }
-.focus-ring-2:focus { outline: none; box-shadow: 0 0 0 2px var(--color-ring); }
+.focus-ring-2:focus {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
 
 /* Input placeholder */
 input::placeholder { color: var(--color-muted-foreground); }
@@ -390,16 +397,18 @@ input::placeholder { color: var(--color-muted-foreground); }
   border: 1px solid var(--color-border);
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .card-header {
-  padding: 16px 24px;
+  padding: 20px 24px 16px;
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
-.card-content { padding: 24px; }
+.card-content { padding: 20px 24px 24px; }
 .card-title {
   font-family: var(--font-heading);
   font-size: 18px;
@@ -458,7 +467,9 @@ input::placeholder { color: var(--color-muted-foreground); }
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -466,9 +477,11 @@ input::placeholder { color: var(--color-muted-foreground); }
   animation: fade-in 0.15s ease-out;
 }
 .dialog-content {
-  background: var(--color-card);
+  background: color-mix(in srgb, var(--color-card) 98%, transparent);
   border-radius: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 10px -2px rgba(0,0,0,0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   max-width: 512px;
   width: 100%;
   margin: 0 16px;
@@ -487,24 +500,6 @@ input::placeholder { color: var(--color-muted-foreground); }
   font-weight: 500;
   background: var(--color-muted);
   color: var(--color-text-muted);
-}
-
-/* Input */
-.input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: 14px;
-  font-family: inherit;
-  transition: all 0.2s ease;
-}
-.input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.2);
 }
 
 /* Calorie Ring */
@@ -548,7 +543,7 @@ input::placeholder { color: var(--color-muted-foreground); }
   transition: all 0.15s ease;
 }
 .nav-link:hover { background: var(--color-muted); color: var(--color-foreground); }
-.nav-link-active { background: rgba(217, 119, 87, 0.1); color: var(--color-primary); font-weight: 500; }
+.nav-link-active { background: color-mix(in srgb, var(--color-primary) 10%, transparent); color: var(--color-primary); font-weight: 500; }
 
 /* Mobile tab */
 .mobile-tab {
@@ -577,7 +572,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 
 /* Remove button */
 .btn-remove { padding: 6px; border-radius: 8px; border: none; background: transparent; color: var(--color-muted-foreground); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
-.btn-remove:hover { background: #fef2f2; color: #ef4444; }
+.btn-remove:hover { background: color-mix(in srgb, var(--color-destructive) 10%, transparent); color: var(--color-destructive); }
 
 /* Macro stat mini card */
 .macro-stat { border-radius: 12px; padding: 12px 16px; text-align: center; }
@@ -592,7 +587,11 @@ input::placeholder { color: var(--color-muted-foreground); }
 .search-wrapper { position: relative; }
 .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-muted-foreground); }
 .search-input { width: 100%; padding: 8px 12px 8px 40px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-foreground); font-size: 14px; }
-.search-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.2); }
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
 .search-input::placeholder { color: var(--color-muted-foreground); }
 
 /* Back link */
@@ -604,7 +603,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 .food-result:hover { background: var(--color-muted); }
 
 /* Empty state */
-.empty-state { border: 2px dashed var(--color-border); border-radius: 12px; padding: 48px; text-align: center; }
+.empty-state { border-radius: 12px; padding: 48px 24px; text-align: center; background: var(--color-muted); }
 
 /* System dark mode default (applied before JS runs) */
 @media (prefers-color-scheme: dark) {
