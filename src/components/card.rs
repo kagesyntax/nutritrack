@@ -1,10 +1,36 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Card(class: Option<&'static str>, children: Element) -> Element {
-    let base = class.map(|c| format!("card {}", c)).unwrap_or_else(|| "card".to_string());
+pub fn Card(
+    onclick: Option<EventHandler<MouseEvent>>,
+    class: Option<&'static str>,
+    children: Element,
+) -> Element {
+    let is_clickable = onclick.is_some();
+    let hover = "cursor-pointer group transition-all duration-200 hover:shadow-md hover:-translate-y-0_5";
+    let base = class.map(|c| {
+        if is_clickable {
+            format!("card {} {}", c, hover)
+        } else {
+            format!("card {}", c)
+        }
+    }).unwrap_or_else(|| {
+        if is_clickable {
+            format!("card {}", hover)
+        } else {
+            "card".to_string()
+        }
+    });
     rsx! {
-        div { class: "{base}", {children} }
+        div {
+            class: "{base}",
+            onclick: move |e| {
+                if let Some(oc) = &onclick {
+                    oc.call(e);
+                }
+            },
+            {children}
+        }
     }
 }
 
