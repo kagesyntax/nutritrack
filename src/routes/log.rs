@@ -12,8 +12,21 @@ use crate::utils::{entry_calories, entry_nutrition, todays_date};
 
 #[component]
 pub fn Log() -> Element {
-    let logs = use_context::<Signal<Vec<crate::state::models::DayLog>>>();
+    let mut logs = use_context::<Signal<Vec<crate::state::models::DayLog>>>();
     let today = todays_date();
+
+    // Ensure all meal slots exist in today's log
+    {
+        let mut guard = logs.write();
+        if let Some(day) = guard.iter_mut().find(|l| l.date == today) {
+            for mt in MealType::all() {
+                if !day.meals.values().any(|m| m.meal_type == mt) {
+                    let meal = Meal::new(mt);
+                    day.meals.insert(meal.id.clone(), meal);
+                }
+            }
+        }
+    }
 
     let day_log = {
         let logs_guard = logs.read();
@@ -27,7 +40,7 @@ pub fn Log() -> Element {
                 .as_ref()
                 .and_then(|dl| dl.meals.values().find(|m| m.meal_type == *mt))
                 .cloned();
-            (mt.clone(), meal)
+            (*mt, meal)
         })
         .collect();
 
@@ -237,8 +250,18 @@ fn FoodSearchModal(
         {
             let mut guard = logs.write();
             if let Some(day) = guard.iter_mut().find(|l| l.date == today) {
-                let meal = day.meals.values_mut().find(|m| m.meal_type == meal_type);
-                if let Some(m) = meal {
+                let meal_id = day
+                    .meals
+                    .values()
+                    .find(|m| m.meal_type == meal_type)
+                    .map(|m| m.id.clone())
+                    .unwrap_or_else(|| {
+                        let new_meal = Meal::new(meal_type);
+                        let id = new_meal.id.clone();
+                        day.meals.insert(id.clone(), new_meal);
+                        id
+                    });
+                if let Some(m) = day.meals.get_mut(&meal_id) {
                     m.entries.push(FoodEntry::new(food_id));
                 }
             }
