@@ -47,6 +47,62 @@ pub fn Dashboard() -> Element {
         })
         .collect();
 
+    let mut food_dates: Vec<String> = logs
+        .read()
+        .iter()
+        .filter(|dl| dl.meals.values().any(|m| !m.entries.is_empty()))
+        .map(|dl| dl.date.clone())
+        .collect();
+    food_dates.sort();
+    food_dates.dedup();
+
+    let mut streak = 0i32;
+    let cursor = js_sys::Date::new_0();
+    loop {
+        let date_str = format!(
+            "{:04}-{:02}-{:02}",
+            cursor.get_full_year(),
+            cursor.get_month() + 1,
+            cursor.get_date(),
+        );
+        if food_dates.contains(&date_str) {
+            streak += 1;
+            cursor.set_date(cursor.get_date() - 1);
+        } else {
+            break;
+        }
+    }
+
+    let today_dt = js_sys::Date::new_0();
+    let current_year = today_dt.get_full_year();
+    let current_month_0idx = today_dt.get_month();
+
+    let days_this_month_with_food = food_dates
+        .iter()
+        .filter(|d| {
+            let parts: Vec<&str> = d.split('-').collect();
+            parts.len() == 3
+                && parts[0].parse::<u32>().unwrap_or(0) == current_year
+                && parts[1].parse::<u32>().unwrap_or(0) == current_month_0idx + 1
+        })
+        .count();
+
+    let (next_year, next_month_0idx) = if current_month_0idx == 11 {
+        (current_year + 1, 0u32)
+    } else {
+        (current_year, current_month_0idx + 1)
+    };
+    let temp = js_sys::Date::new_with_year_month_day(next_year, next_month_0idx as i32, 0);
+    let total_days_in_month = temp.get_date();
+
+    let consistency = if total_days_in_month > 0 {
+        (days_this_month_with_food as f64 / total_days_in_month as f64 * 100.0) as i32
+    } else {
+        0
+    };
+
+    let remaining = target_cal - total_cal;
+
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
             div { class: "flex items-center justify-between",
@@ -62,10 +118,30 @@ pub fn Dashboard() -> Element {
                 }
             }
 
+            div { class: "flex flex-wrap gap-3",
+                div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
+                    "🔥 {streak} day streak"
+                }
+                div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-surface-secondary text-foreground text-xs font-medium",
+                    "📊 {consistency}% this month"
+                }
+            }
+
             div { class: "grid grid-cols-1 md-grid-cols-3 gap-6",
                 Card { class: "md-col-span-1",
-                    CardContent { class: "flex justify-center py-6",
-                        CalorieRing { current: total_cal, target: target_cal }
+                    CardContent { class: "py-6",
+                        div { class: "flex flex-col items-center",
+                            CalorieRing { current: total_cal, target: target_cal }
+                            if total_cal < target_cal {
+                                p { class: "text-sm text-muted-foreground mt-2", "{remaining:.0} kcal remaining" }
+                                div { class: "macro-bar-track mt-1 w-4/5",
+                                    div {
+                                        class: "macro-bar-fill bg-primary",
+                                        style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -84,6 +160,20 @@ pub fn Dashboard() -> Element {
                 }
             }
 
+            Card {
+                CardHeader {
+                    CardTitle { class: "font-heading", "Daily Goals" }
+                }
+                CardContent {
+                    div { class: "grid grid-cols-2 md-grid-cols-4 gap-3",
+                        GoalCircle { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein" }
+                        GoalCircle { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs" }
+                        GoalCircle { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat" }
+                        GoalCircle { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber" }
+                    }
+                }
+            }
+
             h2 { class: "text-lg font-semibold text-foreground font-heading", "Today's Meals" }
             div { class: "space-y-3",
                 for (meal_type, cals, count) in &meal_summaries {
@@ -92,6 +182,24 @@ pub fn Dashboard() -> Element {
                         class: "block group",
                         MealSummaryCard { meal_type: meal_type.clone(), calories: *cals, item_count: *count }
                     }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn GoalCircle(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str) -> Element {
+    let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
+    rsx! {
+        div { class: "text-center p-3 rounded-lg bg-surface-secondary",
+            p { class: "text-xs text-muted-foreground", "{label}" }
+            p { class: "text-lg font-bold tabular-nums text-foreground mt-1", "{current:.0}" }
+            p { class: "text-xs text-muted-foreground", "/ {target:.0} {unit}" }
+            div { class: "macro-bar-track mt-2",
+                div {
+                    class: "macro-bar-fill {color}",
+                    style: "width: {pct:.0}%",
                 }
             }
         }
