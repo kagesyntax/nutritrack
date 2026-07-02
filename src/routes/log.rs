@@ -7,7 +7,7 @@ use crate::components::icons::{
     IconCoffee, IconMinus, IconMoon, IconPlus, IconSearch, IconSun, IconSunrise, IconX,
 };
 use crate::state::food_db::{find_food, search_foods};
-use crate::state::models::{FoodEntry, FoodItem, Meal, MealType};
+use crate::state::models::{FoodEntry, FoodItem, Meal, MealType, UserSettings};
 use crate::utils::{entry_calories, entry_nutrition, todays_date};
 
 #[component]
@@ -44,11 +44,78 @@ pub fn Log() -> Element {
         })
         .collect();
 
+    let settings = use_context::<Signal<UserSettings>>();
+    let target = settings.read().targets.calories;
+    let target_p = settings.read().targets.protein_g;
+    let target_c = settings.read().targets.carbs_g;
+    let target_f = settings.read().targets.fat_g;
+
+    let total_cal: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
+        find_food(&e.food_id).map(|f| f.calories * e.servings)
+    }).sum();
+
+    let total_p: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
+        find_food(&e.food_id).map(|f| f.protein_g * e.servings)
+    }).sum();
+
+    let total_c: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
+        find_food(&e.food_id).map(|f| f.carbs_g * e.servings)
+    }).sum();
+
+    let total_f: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
+        find_food(&e.food_id).map(|f| f.fat_g * e.servings)
+    }).sum();
+
+    let remaining = target - total_cal;
+    let remaining_color = if remaining > 0.0 { "text-primary" } else { "text-fat" };
+    let pct = total_cal / target;
+
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
             div { class: "flex items-baseline justify-between",
                 h1 { class: "text-2xl font-bold text-foreground font-heading", "Food Log" }
                 p { class: "text-sm text-muted-foreground", "{today}" }
+            }
+
+            Card {
+                class: "bg-surface-secondary border-0",
+                CardContent { class: "py-3 px-4",
+                    div { class: "flex items-center justify-between flex-wrap gap-2",
+                        div { class: "flex items-center gap-4 flex-wrap",
+                            div { class: "text-center",
+                                p { class: "text-xs text-muted-foreground", "Calories" }
+                                p { class: "text-lg font-bold tabular-nums text-foreground", "{total_cal:.0}" }
+                                p { class: "text-xs text-muted-foreground", "of {target} goal" }
+                            }
+                            div { class: "text-center",
+                                p { class: "text-xs text-muted-foreground", "Remaining" }
+                                p { class: "text-lg font-bold tabular-nums {remaining_color}", "{remaining:.0}" }
+                                p { class: "text-xs text-muted-foreground", "kcal" }
+                            }
+                            div { class: "text-center",
+                                p { class: "text-xs text-muted-foreground", "Protein" }
+                                p { class: "text-lg font-bold tabular-nums text-protein", "{total_p:.0}" }
+                                p { class: "text-xs text-muted-foreground", "of {target_p:.0} g" }
+                            }
+                            div { class: "text-center",
+                                p { class: "text-xs text-muted-foreground", "Carbs" }
+                                p { class: "text-lg font-bold tabular-nums text-carbs", "{total_c:.0}" }
+                                p { class: "text-xs text-muted-foreground", "of {target_c:.0} g" }
+                            }
+                            div { class: "text-center",
+                                p { class: "text-xs text-muted-foreground", "Fat" }
+                                p { class: "text-lg font-bold tabular-nums text-fat", "{total_f:.0}" }
+                                p { class: "text-xs text-muted-foreground", "of {target_f:.0} g" }
+                            }
+                        }
+                    }
+                    div { class: "macro-bar-track mt-3",
+                        div {
+                            class: "macro-bar-fill bg-primary",
+                            style: "width: {pct.min(100.0):.0}%",
+                        }
+                    }
+                }
             }
 
             div { class: "space-y-4",
@@ -78,7 +145,6 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
     }
 
     let cals_str = format!("{:.0} kcal", cals);
-    let nut_str = format!("{:.0}g P / {:.0}g C / {:.0}g F", nut_vals[0], nut_vals[1], nut_vals[2]);
 
     let meal_icon = match meal_type {
         MealType::Breakfast => rsx! { IconSunrise { size: 18 } },
@@ -111,9 +177,14 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
                                 }
                             }
                         }
-                        div { class: "mt-3 pt-3 border-t border-border flex justify-between text-sm font-medium text-foreground",
-                            span { "Totals" }
-                            span { class: "tabular-nums", "{nut_str}" }
+                        div { class: "mt-2 pt-2 border-t border-border flex items-center justify-between text-xs",
+                            span { class: "font-medium text-foreground", "Totals" }
+                            div { class: "flex items-center gap-3 tabular-nums",
+                                span { class: "text-protein", "{nut_vals[0]:.0}g P" }
+                                span { class: "text-carbs", "{nut_vals[1]:.0}g C" }
+                                span { class: "text-fat", "{nut_vals[2]:.0}g F" }
+                                span { class: "text-fiber", "{nut_vals[3]:.0}g fiber" }
+                            }
                         }
                     }
                 } else {
