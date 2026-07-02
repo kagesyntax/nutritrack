@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 
 use crate::components::button::{Button, ButtonVariant};
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
+use crate::state::models::ThemeMode;
 
 #[component]
 pub fn Settings() -> Element {
@@ -11,6 +12,37 @@ pub fn Settings() -> Element {
     rsx! {
         div { class: "max-w-2xl mx-auto p-6 space-y-6",
             h1 { class: "text-2xl font-bold text-foreground font-heading", "Settings" }
+
+            Card {
+                CardHeader {
+                    CardTitle { class: "font-heading", "Theme" }
+                }
+                CardContent {
+                    div { class: "flex gap-3",
+                        ThemeOption {
+                            label: "Light",
+                            active: settings.read().theme_mode == ThemeMode::Light,
+                            onclick: move |_| {
+                                settings.write().theme_mode = ThemeMode::Light;
+                            },
+                        }
+                        ThemeOption {
+                            label: "Dark",
+                            active: settings.read().theme_mode == ThemeMode::Dark,
+                            onclick: move |_| {
+                                settings.write().theme_mode = ThemeMode::Dark;
+                            },
+                        }
+                        ThemeOption {
+                            label: "System",
+                            active: settings.read().theme_mode == ThemeMode::System,
+                            onclick: move |_| {
+                                settings.write().theme_mode = ThemeMode::System;
+                            },
+                        }
+                    }
+                }
+            }
 
             Card {
                 CardHeader {
@@ -78,6 +110,24 @@ pub fn Settings() -> Element {
                     }
                 }
             }
+        }
+    }
+}
+
+#[component]
+fn ThemeOption(
+    label: &'static str,
+    active: bool,
+    onclick: EventHandler<MouseEvent>,
+) -> Element {
+    let active_class = if active { "bg-primary text-white border-primary" } else { "bg-card text-foreground border-border" };
+    rsx! {
+        button {
+            class: "flex-1 px-4 py-2_5 rounded-lg border text-sm font-medium transition-all duration-200 {active_class}",
+            onclick: move |e| {
+                onclick.call(e);
+            },
+            "{label}"
         }
     }
 }

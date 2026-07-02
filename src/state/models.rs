@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum MealType {
     Breakfast,
     Lunch,
@@ -106,15 +106,24 @@ impl Default for NutritionTargets {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub enum ThemeMode {
+    Light,
+    Dark,
+    System,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct UserSettings {
     pub targets: NutritionTargets,
+    pub theme_mode: ThemeMode,
 }
 
 impl Default for UserSettings {
     fn default() -> Self {
         Self {
             targets: NutritionTargets::default(),
+            theme_mode: ThemeMode::System,
         }
     }
 }
