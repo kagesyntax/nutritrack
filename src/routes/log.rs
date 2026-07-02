@@ -6,7 +6,6 @@ use crate::components::dialog::{Dialog, DialogContent};
 use crate::components::icons::{
     IconCoffee, IconMinus, IconMoon, IconPlus, IconSearch, IconSun, IconSunrise, IconX,
 };
-
 use crate::state::food_db::{find_food, search_foods};
 use crate::state::models::{FoodEntry, FoodItem, Meal, MealType};
 use crate::utils::{entry_calories, entry_nutrition, todays_date};
@@ -126,7 +125,6 @@ fn FoodSearchTrigger(meal_type: MealType) -> Element {
         if show_search() {
             FoodSearchModal {
                 meal_type: meal_type,
-                is_open: true,
                 on_close: move |_| show_search.set(false),
             }
         }
@@ -153,7 +151,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
         .unwrap_or_default();
 
     rsx! {
-        div { class: "flex items-center justify-between py-2.5 gap-2 group",
+        div { class: "flex items-center justify-between py-2_5 gap-2 group",
             div { class: "flex-1 min-w-0",
                 p { class: "text-sm font-medium text-foreground truncate",
                     if let Some(f) = &food {
@@ -163,10 +161,10 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                     }
                 }
             }
-            div { class: "flex items-center gap-1.5 shrink-0",
-                div { class: "flex items-center border border-border rounded-lg overflow-hidden",
+            div { class: "flex items-center gap-1_5 shrink-0",
+                div { class: "serving-control",
                     button {
-                        class: "p-1 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                        class: "serving-btn",
                         onclick: move |_| {
                             let mut guard = logs.write();
                             if let Some(day) = guard.iter_mut().find(|l| l.date == t1) {
@@ -180,9 +178,9 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                         },
                         IconMinus { size: 12 }
                     }
-                    span { class: "px-1.5 text-xs tabular-nums font-medium text-foreground min-w-[28px] text-center", "{servings_str}" }
+                    span { class: "serving-value", "{servings_str}" }
                     button {
-                        class: "p-1 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                        class: "serving-btn",
                         onclick: move |_| {
                             let mut guard = logs.write();
                             if let Some(day) = guard.iter_mut().find(|l| l.date == t2) {
@@ -198,7 +196,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                 }
                 span { class: "text-xs tabular-nums text-muted-foreground w-12 text-right", "{cals_str}" }
                 button {
-                    class: "p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-muted-foreground transition-all duration-200",
+                    class: "btn-remove",
                     onclick: move |_| {
                         let mut guard = logs.write();
                         if let Some(day) = guard.iter_mut().find(|l| l.date == t3) {
@@ -219,7 +217,6 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
 #[component]
 fn FoodSearchModal(
     meal_type: MealType,
-    is_open: bool,
     on_close: EventHandler<()>,
 ) -> Element {
     let mut query = use_signal(|| String::new());
@@ -265,7 +262,7 @@ fn FoodSearchModal(
             let mut add = add_food.clone();
             items.push(rsx! {
                 div {
-                    class: "flex items-center justify-between py-2.5 cursor-pointer hover:bg-muted px-3 rounded-lg transition-colors -mx-3",
+                    class: "food-result",
                     onclick: move |_| add(id.clone()),
                     div {
                         p { class: "text-sm font-medium text-foreground", "{name}" }
@@ -285,22 +282,24 @@ fn FoodSearchModal(
 
     rsx! {
         Dialog {
-            show: is_open,
+            show: true,
             onclose: move |_| on_close.call(()),
-            DialogContent {
+            DialogContent { class: "p-0",
                 div { class: "flex items-center justify-between px-6 py-4 border-b border-border",
-                    h3 { class: "text-lg font-semibold text-foreground", "Add Food" }
+                    h3 { class: "text-lg font-semibold text-card-foreground", "Add Food" }
                     button {
-                        class: "p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors",
+                        class: "p-1_5 rounded-lg hover-bg-muted text-muted-foreground transition-colors",
                         onclick: move |_| on_close.call(()),
                         IconX { size: 16 }
                     }
                 }
                 div { class: "p-6 space-y-3",
-                    div { class: "relative",
-                        IconSearch { class: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground", size: 16 }
+                    div { class: "search-wrapper",
+                        div { class: "search-icon",
+                            IconSearch { size: 16 }
+                        }
                         input {
-                            class: "w-full pl-10 pr-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-sm",
+                            class: "search-input",
                             placeholder: "Search foods...",
                             value: query(),
                             oninput: move |e| update_search(e.value()),

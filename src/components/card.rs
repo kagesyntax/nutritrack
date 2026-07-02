@@ -1,49 +1,33 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Card(children: Element, class: Option<&'static str>) -> Element {
-    let base = "bg-card rounded-xl shadow-sm border border-border";
-    let cls = match class {
-        Some(c) => format!("{} {}", base, c),
-        None => base.to_string(),
-    };
+pub fn Card(class: Option<&'static str>, children: Element) -> Element {
+    let base = class.map(|c| format!("card {}", c)).unwrap_or_else(|| "card".to_string());
     rsx! {
-        div { class: "{cls}", {children} }
+        div { class: "{base}", {children} }
     }
 }
 
 #[component]
-pub fn CardHeader(children: Element, class: Option<&'static str>) -> Element {
-    let base = "px-6 py-4";
-    let cls = match class {
-        Some(c) => format!("{} {}", base, c),
-        None => base.to_string(),
-    };
+pub fn CardHeader(class: Option<&'static str>, children: Element) -> Element {
+    let base = class.map(|c| format!("card-header {}", c)).unwrap_or_else(|| "card-header".to_string());
     rsx! {
-        div { class: "{cls}", {children} }
+        div { class: "{base}", {children} }
     }
 }
 
 #[component]
-pub fn CardTitle(children: Element, class: Option<&'static str>) -> Element {
-    let base = "text-lg font-semibold";
-    let cls = match class {
-        Some(c) => format!("{} {}", base, c),
-        None => base.to_string(),
-    };
+pub fn CardContent(class: Option<&'static str>, children: Element) -> Element {
+    let base = class.map(|c| format!("card-content {}", c)).unwrap_or_else(|| "card-content".to_string());
     rsx! {
-        h3 { class: "{cls}", {children} }
+        div { class: "{base}", {children} }
     }
 }
 
 #[component]
-pub fn CardContent(children: Element, class: Option<&'static str>) -> Element {
-    let base = "px-6 py-4";
-    let cls = match class {
-        Some(c) => format!("{} {}", base, c),
-        None => base.to_string(),
-    };
+pub fn CardTitle(class: Option<&'static str>, children: Element) -> Element {
+    let base = class.map(|c| format!("card-title {}", c)).unwrap_or_else(|| "card-title".to_string());
     rsx! {
-        div { class: "{cls}", {children} }
+        h3 { class: "{base}", {children} }
     }
 }

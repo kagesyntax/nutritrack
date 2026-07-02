@@ -2,7 +2,6 @@ use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent};
 use crate::components::icons::IconArrowLeft;
-
 use crate::state::food_db::find_food;
 use crate::state::models::DayLog;
 
@@ -69,10 +68,10 @@ pub fn MealDetail(id: String) -> Element {
     rsx! {
         div { class: "max-w-4xl mx-auto p-6",
             Link {
-                class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors",
+                class: "back-link",
                 to: crate::app::Route::Log {},
                 button {
-                    class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors",
+                    class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-lg hover-bg-muted transition-colors",
                     IconArrowLeft { size: 16 }
                     "Back to Log"
                 }
@@ -86,17 +85,17 @@ pub fn MealDetail(id: String) -> Element {
 
                 if total_protein > 0.0 || total_carbs > 0.0 || total_fat > 0.0 {
                     div { class: "grid grid-cols-3 gap-3 mb-6",
-                        div { class: "bg-protein/10 rounded-xl px-4 py-3 text-center",
-                            p { class: "text-xs text-protein font-medium uppercase tracking-wider", "Protein" }
-                            p { class: "text-lg font-bold tabular-nums text-protein", "{total_protein:.0}g" }
+                        div { class: "macro-stat bg-protein-10",
+                            p { class: "macro-stat-label text-protein", "Protein" }
+                            p { class: "macro-stat-value text-protein", "{total_protein:.0}g" }
                         }
-                        div { class: "bg-carbs/10 rounded-xl px-4 py-3 text-center",
-                            p { class: "text-xs text-carbs font-medium uppercase tracking-wider", "Carbs" }
-                            p { class: "text-lg font-bold tabular-nums text-carbs", "{total_carbs:.0}g" }
+                        div { class: "macro-stat bg-carbs-10",
+                            p { class: "macro-stat-label text-carbs", "Carbs" }
+                            p { class: "macro-stat-value text-carbs", "{total_carbs:.0}g" }
                         }
-                        div { class: "bg-fat/10 rounded-xl px-4 py-3 text-center",
-                            p { class: "text-xs text-fat font-medium uppercase tracking-wider", "Fat" }
-                            p { class: "text-lg font-bold tabular-nums text-fat", "{total_fat:.0}g" }
+                        div { class: "macro-stat bg-fat-10",
+                            p { class: "macro-stat-label text-fat", "Fat" }
+                            p { class: "macro-stat-value text-fat", "{total_fat:.0}g" }
                         }
                     }
                 }

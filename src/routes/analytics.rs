@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-
 use crate::state::food_db::find_food;
 
 #[component]
@@ -63,14 +62,14 @@ pub fn Analytics() -> Element {
             h1 { class: "text-2xl font-bold text-foreground font-heading", "Analytics" }
 
             if recent.is_empty() {
-                div { class: "border-2 border-dashed border-border rounded-xl p-12 text-center",
+                div { class: "empty-state",
                     div { class: "flex flex-col items-center gap-2",
                         p { class: "text-lg font-medium text-foreground", "No data yet" }
                         p { class: "text-sm text-muted-foreground", "Log some meals to see your analytics." }
                     }
                 }
             } else {
-                div { class: "grid grid-cols-1 md:grid-cols-3 gap-4",
+                div { class: "grid grid-cols-1 md-grid-cols-3 gap-4",
                     StatCard { label: "Days Tracked", value: format!("{}", recent.len()), unit: "days" }
                     StatCard { label: "Avg Daily Calories", value: avg_str, unit: "kcal" }
                     StatCard { label: "Avg vs Target", value: pct_str, unit: "" }
@@ -83,15 +82,15 @@ pub fn Analytics() -> Element {
                     CardContent {
                         div { class: "space-y-3",
                             for (date, cals_str, pct, bar_color) in &recent_days {
-                                div { class: "flex items-center gap-3 text-sm group",
-                                    span { class: "w-24 text-muted-foreground shrink-0 text-xs", "{date}" }
-                                    div { class: "flex-1 h-2.5 rounded-full bg-muted overflow-hidden",
+                                div { class: "day-bar",
+                                    span { class: "day-bar-date", "{date}" }
+                                    div { class: "day-bar-track",
                                         div {
-                                            class: "h-full rounded-full transition-all duration-500 {bar_color}",
+                                            class: "day-bar-fill {bar_color}",
                                             style: "width: {pct.min(100.0):.0}%",
                                         }
                                     }
-                                    span { class: "w-20 text-right tabular-nums text-foreground text-xs font-medium", "{cals_str}" }
+                                    span { class: "day-bar-cals", "{cals_str}" }
                                 }
                             }
                         }
@@ -105,11 +104,11 @@ pub fn Analytics() -> Element {
 #[component]
 fn StatCard(label: &'static str, value: String, unit: &'static str) -> Element {
     rsx! {
-        Card { class: "hover:shadow-md hover:-translate-y-0.5 transition-all duration-200",
-            CardContent { class: "text-center py-6",
-                p { class: "text-xs text-muted-foreground uppercase tracking-wider font-medium", "{label}" }
-                p { class: "text-3xl font-bold tabular-nums text-card-foreground mt-1 font-heading", "{value}" }
-                p { class: "text-xs text-muted-foreground mt-1", "{unit}" }
+        Card { class: "hover-shadow-md hover--translate-y-0_5 transition-all duration-200",
+            CardContent { class: "stat-card",
+                p { class: "stat-card-label", "{label}" }
+                p { class: "stat-card-value", "{value}" }
+                p { class: "stat-card-unit", "{unit}" }
             }
         }
     }

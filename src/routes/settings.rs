@@ -96,8 +96,8 @@ fn TargetInput(
             label { class: "text-sm font-medium text-foreground sm:w-24 shrink-0", "{label}" }
             div { class: "flex-1 flex items-center gap-2",
                 input {
-                    class: "w-full px-3 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200",
-                    type: "number",
+                    class: "w-full px-3 py-2_5 rounded-lg border border-border bg-background text-foreground text-sm tabular-nums focus-outline-none focus-ring-2 transition-all duration-200",
+                    "type": "number",
                     value: val(),
                     min: "0",
                     step: if unit == "kcal" { "50" } else { "5" },

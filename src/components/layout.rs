@@ -1,17 +1,16 @@
 use dioxus::prelude::*;
 
+use crate::app::Route;
 use crate::components::icons::{
     IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings,
 };
 
-use crate::app::Route;
-
 #[component]
 pub fn AppShell() -> Element {
     rsx! {
-        div { class: "flex h-screen bg-background text-foreground",
+        div { class: "app-shell",
             Sidebar {}
-            main { class: "flex-1 overflow-y-auto bg-background pb-20 md:pb-0",
+            main { class: "main-content",
                 Outlet::<Route> {}
             }
             MobileBottomNav {}
@@ -22,14 +21,12 @@ pub fn AppShell() -> Element {
 #[component]
 fn Sidebar() -> Element {
     rsx! {
-        nav { class: "hidden md:flex w-64 bg-card border-r border-border p-6 flex-col shrink-0 h-screen",
+        nav { class: "sidebar",
             div { class: "flex items-center gap-3 px-3 py-4 mb-8",
-                div { class: "w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white text-sm font-bold",
-                    "N"
-                }
+                div { class: "logo", "N" }
                 span { class: "font-heading font-semibold text-xl text-card-foreground", "NutriTrack" }
             }
-            ul { class: "flex flex-col gap-1.5",
+            ul { class: "flex flex-col gap-1_5",
                 NavLink { to: "/", label: "Dashboard" }
                 NavLink { to: "/log", label: "Log" }
                 NavLink { to: "/history", label: "History" }
@@ -54,8 +51,8 @@ fn NavLink(to: &'static str, label: &'static str) -> Element {
     rsx! {
         li {
             Link {
-                class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors duration-150",
-                active_class: "bg-primary/10 text-primary font-medium",
+                class: "nav-link",
+                active_class: "nav-link-active",
                 to: to,
                 {icon}
                 span { "{label}" }
@@ -67,8 +64,8 @@ fn NavLink(to: &'static str, label: &'static str) -> Element {
 #[component]
 fn MobileBottomNav() -> Element {
     rsx! {
-        nav { class: "fixed bottom-0 left-0 right-0 bg-card border-t border-border md:hidden z-50",
-            div { class: "flex items-center justify-around py-1 px-2",
+        nav { class: "mobile-bottom-nav",
+            div { class: "flex items-center justify-around py-1 px-2 w-full",
                 MobileTab { to: "/", label: "Home" }
                 MobileTab { to: "/log", label: "Log" }
                 MobileTab { to: "/history", label: "History" }
@@ -92,11 +89,11 @@ fn MobileTab(to: &'static str, label: &'static str) -> Element {
 
     rsx! {
         Link {
-            class: "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-muted-foreground transition-colors duration-150 min-h-[48px] min-w-[48px] justify-center",
-            active_class: "text-primary",
+            class: "mobile-tab",
+            active_class: "mobile-tab-active",
             to: to,
             {icon}
-            span { class: "text-[10px] leading-tight font-medium", "{label}" }
+            span { class: "text-10px leading-tight font-medium", "{label}" }
         }
     }
 }

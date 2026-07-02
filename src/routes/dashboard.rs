@@ -56,29 +56,29 @@ pub fn Dashboard() -> Element {
                 }
                 Link {
                     to: crate::app::Route::Log {},
-                    class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors duration-200",
+                    class: "inline-flex items-center gap-1_5 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover-bg-primary-dark transition-colors",
                     IconSunrise { size: 16 }
                     "Log Meals"
                 }
             }
 
-            div { class: "grid grid-cols-1 md:grid-cols-3 gap-6",
-                Card { class: "md:col-span-1",
+            div { class: "grid grid-cols-1 md-grid-cols-3 gap-6",
+                Card { class: "md-col-span-1",
                     CardContent { class: "flex justify-center py-6",
                         CalorieRing { current: total_cal, target: target_cal }
                     }
                 }
 
-                Card { class: "md:col-span-2",
+                Card { class: "md-col-span-2",
                     CardHeader {
                         CardTitle { class: "font-heading", "Macronutrients" }
                     }
                     CardContent {
                         div { class: "space-y-3",
-                            MacroBar { label: "Protein", current: total_p, target: targets.protein_g, color_class: "bg-protein", unit: "g" }
-                            MacroBar { label: "Carbs", current: total_c, target: targets.carbs_g, color_class: "bg-carbs", unit: "g" }
-                            MacroBar { label: "Fat", current: total_f, target: targets.fat_g, color_class: "bg-fat", unit: "g" }
-                            MacroBar { label: "Fiber", current: total_fiber, target: targets.fiber_g, color_class: "bg-fiber", unit: "g" }
+                            MacroBar { label: "Protein", current: total_p, target: targets.protein_g, color: "bg-protein", unit: "g" }
+                            MacroBar { label: "Carbs", current: total_c, target: targets.carbs_g, color: "bg-carbs", unit: "g" }
+                            MacroBar { label: "Fat", current: total_f, target: targets.fat_g, color: "bg-fat", unit: "g" }
+                            MacroBar { label: "Fiber", current: total_fiber, target: targets.fiber_g, color: "bg-fiber", unit: "g" }
                         }
                     }
                 }
@@ -115,10 +115,10 @@ fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Ele
     };
 
     rsx! {
-        Card { class: "group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200 cursor-pointer",
+        Card { class: "group-hover-shadow-md group-hover--translate-y-0_5 transition-all duration-200 cursor-pointer",
             CardContent { class: "flex items-center justify-between",
                 div { class: "flex items-center gap-3",
-                    div { class: "w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors duration-200",
+                    div { class: "meal-icon",
                         {meal_icon}
                     }
                     div {
@@ -128,7 +128,7 @@ fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Ele
                 }
                 div { class: "flex items-center gap-2",
                     span { class: "text-sm font-semibold tabular-nums text-card-foreground", "{cals_text}" }
-                    IconChevronRight { class: "text-muted-foreground group-hover:text-primary transition-colors duration-200", size: 16 }
+                    IconChevronRight { size: 16 }
                 }
             }
         }

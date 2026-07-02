@@ -1,13 +1,9 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Badge(children: Element, class: Option<&'static str>) -> Element {
-    let base = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium";
-    let cls = match class {
-        Some(c) => format!("{} {}", base, c),
-        None => base.to_string(),
-    };
+pub fn Badge(class: Option<&'static str>, children: Element) -> Element {
+    let base = class.map(|c| format!("badge {}", c)).unwrap_or_else(|| "badge".to_string());
     rsx! {
-        span { class: "{cls}", {children} }
+        span { class: "{base}", {children} }
     }
 }

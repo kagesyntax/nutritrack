@@ -2,7 +2,6 @@ use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent};
 use crate::components::icons::IconCalendar;
-
 use crate::state::food_db::find_food;
 use crate::state::models::DayLog;
 
@@ -18,10 +17,10 @@ pub fn History() -> Element {
             h1 { class: "text-2xl font-bold text-foreground font-heading", "History" }
 
             if sorted.is_empty() {
-                div { class: "border-2 border-dashed border-border rounded-xl p-12 text-center",
-                    div { class: "flex flex-col items-center gap-2",
-                        p { class: "text-lg font-medium text-foreground", "No food logs yet" }
-                        p { class: "text-sm text-muted-foreground", "Start tracking to see your history here." }
+                Card { class: "empty-state",
+                    CardContent { class: "text-center py-12",
+                        p { class: "text-lg font-medium text-card-foreground", "No food logs yet" }
+                        p { class: "text-sm text-muted-foreground mt-1", "Start tracking to see your history here." }
                     }
                 }
             } else {
@@ -51,7 +50,7 @@ fn DayCard(day: DayLog) -> Element {
         Link {
             class: "block group",
             to: crate::app::Route::Log {},
-            Card { class: "group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200 cursor-pointer",
+            Card { class: "group-hover-shadow-md group-hover--translate-y-0_5 transition-all duration-200 cursor-pointer",
                 CardContent { class: "flex items-center justify-between",
                     div { class: "flex items-center gap-3",
                         div { class: "w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-muted-foreground",
