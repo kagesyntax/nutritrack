@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 use dioxus_components::{
-    Button, ButtonVariant, Card, CardContent, CardHeader, CardTitle,
+    Card, CardContent, CardHeader, CardTitle,
 };
-use dioxus_free_icons::icons::fi_icons::{FiCoffee, FiEdit3, FiMoon, FiSun, FiSunrise};
+use dioxus_free_icons::icons::fi_icons::{FiChevronRight, FiCoffee, FiMoon, FiSun, FiSunrise};
 use dioxus_free_icons::Icon;
 
 use crate::components::progress::{CalorieRing, MacroBar};
@@ -54,30 +54,27 @@ pub fn Dashboard() -> Element {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
             div { class: "flex items-center justify-between",
                 div {
-                    h1 { class: "text-2xl font-bold text-foreground", "Dashboard" }
+                    h1 { class: "text-2xl font-bold text-foreground font-heading", "Dashboard" }
                     p { class: "text-sm text-muted-foreground mt-1", "{today}" }
                 }
                 Link {
                     to: crate::app::Route::Log {},
-                    Button {
-                        variant: ButtonVariant::Default,
-                        class: "gap-2",
-                        Icon { width: 16, height: 16, fill: "currentColor", icon: FiEdit3 }
-                        "Log Meals"
-                    }
+                    class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors duration-200",
+                    Icon { width: 16, height: 16, fill: "currentColor", icon: FiSunrise }
+                    "Log Meals"
                 }
             }
 
             div { class: "grid grid-cols-1 md:grid-cols-3 gap-6",
                 Card { class: "md:col-span-1",
-                    CardContent { class: "flex justify-center",
+                    CardContent { class: "flex justify-center py-6",
                         CalorieRing { current: total_cal, target: target_cal }
                     }
                 }
 
                 Card { class: "md:col-span-2",
                     CardHeader {
-                        CardTitle { "Macronutrients" }
+                        CardTitle { class: "font-heading", "Macronutrients" }
                     }
                     CardContent {
                         div { class: "space-y-3",
@@ -90,10 +87,14 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground", "Today's Meals" }
+            h2 { class: "text-lg font-semibold text-foreground font-heading", "Today's Meals" }
             div { class: "space-y-3",
                 for (meal_type, cals, count) in &meal_summaries {
-                    MealSummaryCard { meal_type: meal_type.clone(), calories: *cals, item_count: *count }
+                    Link {
+                        to: crate::app::Route::Log {},
+                        class: "block group",
+                        MealSummaryCard { meal_type: meal_type.clone(), calories: *cals, item_count: *count }
+                    }
                 }
             }
         }
@@ -117,16 +118,21 @@ fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Ele
     };
 
     rsx! {
-        Card {
+        Card { class: "group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200 cursor-pointer",
             CardContent { class: "flex items-center justify-between",
                 div { class: "flex items-center gap-3",
-                    div { class: "text-muted-foreground", {meal_icon} }
+                    div { class: "w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors duration-200",
+                        {meal_icon}
+                    }
                     div {
                         p { class: "font-medium text-card-foreground", "{meal_type.label()}" }
                         p { class: "text-xs text-muted-foreground", "{count_text}" }
                     }
                 }
-                span { class: "text-sm font-semibold tabular-nums text-card-foreground", "{cals_text}" }
+                div { class: "flex items-center gap-2",
+                    span { class: "text-sm font-semibold tabular-nums text-card-foreground", "{cals_text}" }
+                    Icon { class: "text-muted-foreground group-hover:text-primary transition-colors duration-200", width: 16, height: 16, fill: "currentColor", icon: FiChevronRight }
+                }
             }
         }
     }

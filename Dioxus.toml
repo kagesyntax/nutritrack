@@ -1,0 +1,11 @@
+[application]
+name = "NutriTrack"
+
+[web.app]
+title = "NutriTrack"
+
+[web.resource]
+style = ["assets/tailwind.css"]
+
+[web.resource.dev]
+script = []
