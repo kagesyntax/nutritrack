@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::{IconChevronRight, IconCoffee, IconMoon, IconSun, IconSunrise};
+use crate::components::icons::{IconBarChart2, IconChevronRight, IconCoffee, IconFlame, IconMoon, IconSun, IconSunrise};
 use crate::components::progress::{CalorieRing, MacroBar};
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
@@ -120,10 +120,12 @@ pub fn Dashboard() -> Element {
 
             div { class: "flex flex-wrap gap-3",
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
-                    "🔥 {streak} day streak"
+                    IconFlame { size: 14 }
+                    span { "{streak} day streak" }
                 }
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-surface-secondary text-foreground text-xs font-medium",
-                    "📊 {consistency}% this month"
+                    IconBarChart2 { size: 14 }
+                    span { "{consistency}% this month" }
                 }
             }
 

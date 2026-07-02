@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 
 #[allow(unused_imports)]
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
+use crate::components::icons::IconFlame;
 use crate::state::food_db::find_food;
 
 fn day_total_cals(day: &crate::state::models::DayLog) -> f64 {
@@ -234,7 +235,8 @@ pub fn Analytics() -> Element {
                             unit: "days",
                             div { class: "mt-1",
                                 if streak > 0 {
-                                    span { class: "text-xs text-muted-foreground", "🔥 {streak} day{streak_s}" }
+                                    IconFlame { size: 14 }
+span { class: "text-xs text-muted-foreground ml-1", "{streak} day{streak_s}" }
                                 } else {
                                     span { class: "text-xs text-muted-foreground", "Start logging to build a streak" }
                                 }
