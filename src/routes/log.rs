@@ -46,8 +46,10 @@ pub fn Log() -> Element {
 
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
-            h1 { class: "text-2xl font-bold text-foreground font-heading", "Food Log" }
-            p { class: "text-sm text-muted-foreground -mt-4", "{today}" }
+            div { class: "flex items-baseline justify-between",
+                h1 { class: "text-2xl font-bold text-foreground font-heading", "Food Log" }
+                p { class: "text-sm text-muted-foreground", "{today}" }
+            }
 
             div { class: "space-y-4",
                 for (meal_type, meal) in meals {
