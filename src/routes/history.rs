@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::components::card::{Card, CardContent};
+use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
 use crate::components::icons::IconCalendar;
 use crate::state::food_db::find_food;
 use crate::state::models::DayLog;
@@ -51,13 +51,15 @@ fn DayCard(day: DayLog) -> Element {
             class: "block group",
             to: crate::app::Route::Log {},
             Card { class: "group-hover-shadow-md group-hover--translate-y-0_5 transition-all duration-200 cursor-pointer",
+                CardHeader {
+                    CardTitle { class: "font-heading text-base", "{day.date}" }
+                }
                 CardContent { class: "flex items-center justify-between",
                     div { class: "flex items-center gap-3",
                         div { class: "w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-muted-foreground",
                             IconCalendar { size: 18 }
                         }
                         div {
-                            p { class: "font-medium text-card-foreground", "{day.date}" }
                             p { class: "text-xs text-muted-foreground", "{entry_count} items logged" }
                         }
                     }

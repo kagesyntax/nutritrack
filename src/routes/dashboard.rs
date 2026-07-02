@@ -71,7 +71,7 @@ pub fn Dashboard() -> Element {
 
                 Card { class: "md-col-span-2",
                     CardHeader {
-                        CardTitle { class: "font-heading", "Macronutrients" }
+                        CardTitle { class: "font-heading", "Today's Macros" }
                     }
                     CardContent {
                         div { class: "space-y-3",

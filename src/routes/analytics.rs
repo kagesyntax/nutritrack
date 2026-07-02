@@ -69,15 +69,22 @@ pub fn Analytics() -> Element {
                     }
                 }
             } else {
-                div { class: "grid grid-cols-1 md-grid-cols-3 gap-4",
-                    StatCard { label: "Days Tracked", value: format!("{}", recent.len()), unit: "days" }
-                    StatCard { label: "Avg Daily Calories", value: avg_str, unit: "kcal" }
-                    StatCard { label: "Avg vs Target", value: pct_str, unit: "" }
+                Card {
+                    CardHeader {
+                        CardTitle { class: "font-heading", "Overview" }
+                    }
+                    CardContent {
+                        div { class: "grid grid-cols-1 md-grid-cols-3 gap-4",
+                            StatCard { label: "Days Tracked", value: format!("{}", recent.len()), unit: "days" }
+                            StatCard { label: "Avg Daily Calories", value: avg_str, unit: "kcal" }
+                            StatCard { label: "Avg vs Target", value: pct_str, unit: "" }
+                        }
+                    }
                 }
 
                 Card {
                     CardHeader {
-                        CardTitle { class: "font-heading", "Recent Days" }
+                        CardTitle { class: "font-heading", "Last 14 Days" }
                     }
                     CardContent {
                         div { class: "space-y-3",
