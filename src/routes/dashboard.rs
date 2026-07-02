@@ -1,10 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_components::{
-    Card, CardContent, CardHeader, CardTitle,
-};
-use dioxus_free_icons::icons::fi_icons::{FiChevronRight, FiCoffee, FiMoon, FiSun, FiSunrise};
-use dioxus_free_icons::Icon;
 
+use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
+use crate::components::icons::{IconChevronRight, IconCoffee, IconMoon, IconSun, IconSunrise};
 use crate::components::progress::{CalorieRing, MacroBar};
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
@@ -60,7 +57,7 @@ pub fn Dashboard() -> Element {
                 Link {
                     to: crate::app::Route::Log {},
                     class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors duration-200",
-                    Icon { width: 16, height: 16, fill: "currentColor", icon: FiSunrise }
+                    IconSunrise { size: 16 }
                     "Log Meals"
                 }
             }
@@ -111,10 +108,10 @@ fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Ele
     };
 
     let meal_icon = match meal_type {
-        MealType::Breakfast => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiSunrise } },
-        MealType::Lunch => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiSun } },
-        MealType::Dinner => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiMoon } },
-        MealType::Snack => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiCoffee } },
+        MealType::Breakfast => rsx! { IconSunrise { size: 20 } },
+        MealType::Lunch => rsx! { IconSun { size: 20 } },
+        MealType::Dinner => rsx! { IconMoon { size: 20 } },
+        MealType::Snack => rsx! { IconCoffee { size: 20 } },
     };
 
     rsx! {
@@ -131,7 +128,7 @@ fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Ele
                 }
                 div { class: "flex items-center gap-2",
                     span { class: "text-sm font-semibold tabular-nums text-card-foreground", "{cals_text}" }
-                    Icon { class: "text-muted-foreground group-hover:text-primary transition-colors duration-200", width: 16, height: 16, fill: "currentColor", icon: FiChevronRight }
+                    IconChevronRight { class: "text-muted-foreground group-hover:text-primary transition-colors duration-200", size: 16 }
                 }
             }
         }

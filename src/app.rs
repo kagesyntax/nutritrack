@@ -45,7 +45,7 @@ pub fn App() -> Element {
     use_context_provider(|| settings);
 
     rsx! {
-        document::Link { rel: "stylesheet", href: asset!("/assets/tailwind.css") }
+        document::Link { rel: "stylesheet", href: asset!("/assets/main.css") }
         Router::<Route> {}
     }
 }

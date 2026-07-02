@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::fi_icons::{
-    FiBarChart2, FiClock, FiEdit3, FiHome, FiSettings,
+
+use crate::components::icons::{
+    IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings,
 };
-use dioxus_free_icons::Icon;
 
 use crate::app::Route;
 
@@ -43,11 +43,11 @@ fn Sidebar() -> Element {
 #[component]
 fn NavLink(to: &'static str, label: &'static str) -> Element {
     let icon = match to {
-        "/" => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiHome } },
-        "/log" => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiEdit3 } },
-        "/history" => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiClock } },
-        "/analytics" => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiBarChart2 } },
-        "/settings" => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiSettings } },
+        "/" => rsx! { IconHome { size: 18 } },
+        "/log" => rsx! { IconEdit3 { size: 18 } },
+        "/history" => rsx! { IconClock { size: 18 } },
+        "/analytics" => rsx! { IconBarChart2 { size: 18 } },
+        "/settings" => rsx! { IconSettings { size: 18 } },
         _ => VNode::empty(),
     };
 
@@ -82,11 +82,11 @@ fn MobileBottomNav() -> Element {
 #[component]
 fn MobileTab(to: &'static str, label: &'static str) -> Element {
     let icon = match to {
-        "/" => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiHome } },
-        "/log" => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiEdit3 } },
-        "/history" => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiClock } },
-        "/analytics" => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiBarChart2 } },
-        "/settings" => rsx! { Icon { width: 20, height: 20, fill: "currentColor", icon: FiSettings } },
+        "/" => rsx! { IconHome { size: 20 } },
+        "/log" => rsx! { IconEdit3 { size: 20 } },
+        "/history" => rsx! { IconClock { size: 20 } },
+        "/analytics" => rsx! { IconBarChart2 { size: 20 } },
+        "/settings" => rsx! { IconSettings { size: 20 } },
         _ => VNode::empty(),
     };
 

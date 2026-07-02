@@ -1,12 +1,11 @@
 use dioxus::prelude::*;
-use dioxus_components::{
-    Button, ButtonSize, ButtonVariant, Card, CardContent, CardHeader, CardTitle, Dialog,
-    DialogContent, DialogDescription, DialogOverlay, DialogTitle,
+
+use crate::components::button::{Button, ButtonSize, ButtonVariant};
+use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
+use crate::components::dialog::{Dialog, DialogContent};
+use crate::components::icons::{
+    IconCoffee, IconMinus, IconMoon, IconPlus, IconSearch, IconSun, IconSunrise, IconX,
 };
-use dioxus_free_icons::icons::fi_icons::{
-    FiCoffee, FiMinus, FiMoon, FiPlus, FiSearch, FiSun, FiSunrise, FiX,
-};
-use dioxus_free_icons::Icon;
 
 use crate::state::food_db::{find_food, search_foods};
 use crate::state::models::{FoodEntry, FoodItem, Meal, MealType};
@@ -68,10 +67,10 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
     let nut_str = format!("{:.0}g P / {:.0}g C / {:.0}g F", nut_vals[0], nut_vals[1], nut_vals[2]);
 
     let meal_icon = match meal_type {
-        MealType::Breakfast => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiSunrise } },
-        MealType::Lunch => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiSun } },
-        MealType::Dinner => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiMoon } },
-        MealType::Snack => rsx! { Icon { width: 18, height: 18, fill: "currentColor", icon: FiCoffee } },
+        MealType::Breakfast => rsx! { IconSunrise { size: 18 } },
+        MealType::Lunch => rsx! { IconSun { size: 18 } },
+        MealType::Dinner => rsx! { IconMoon { size: 18 } },
+        MealType::Snack => rsx! { IconCoffee { size: 18 } },
     };
 
     rsx! {
@@ -121,7 +120,7 @@ fn FoodSearchTrigger(meal_type: MealType) -> Element {
             size: ButtonSize::Sm,
             class: "gap-1 shrink-0",
             onclick: move |_| show_search.set(true),
-            Icon { width: 14, height: 14, fill: "currentColor", icon: FiPlus }
+            IconPlus { size: 14 }
             "Add Food"
         }
         if show_search() {
@@ -179,7 +178,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                                 }
                             }
                         },
-                        Icon { width: 12, height: 12, fill: "currentColor", icon: FiMinus }
+                        IconMinus { size: 12 }
                     }
                     span { class: "px-1.5 text-xs tabular-nums font-medium text-foreground min-w-[28px] text-center", "{servings_str}" }
                     button {
@@ -194,7 +193,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                                 }
                             }
                         },
-                        Icon { width: 12, height: 12, fill: "currentColor", icon: FiPlus }
+                        IconPlus { size: 12 }
                     }
                 }
                 span { class: "text-xs tabular-nums text-muted-foreground w-12 text-right", "{cals_str}" }
@@ -210,7 +209,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                             }
                         }
                     },
-                    Icon { width: 14, height: 14, fill: "currentColor", icon: FiX }
+                    IconX { size: 14 }
                 }
             }
         }
@@ -286,22 +285,20 @@ fn FoodSearchModal(
 
     rsx! {
         Dialog {
-            open: Some(is_open),
-            on_open_change: move |open: bool| if !open { on_close.call(()) },
-            DialogOverlay { class: "fixed inset-0 bg-black/40" }
-            DialogContent { class: "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card rounded-xl shadow-lg max-w-lg w-full mx-4 max-h-[85vh] overflow-y-auto p-0",
+            show: is_open,
+            onclose: move |_| on_close.call(()),
+            DialogContent {
                 div { class: "flex items-center justify-between px-6 py-4 border-b border-border",
-                    DialogTitle { class: "text-lg font-semibold text-card-foreground", "Add Food" }
+                    h3 { class: "text-lg font-semibold text-foreground", "Add Food" }
                     button {
                         class: "p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors",
                         onclick: move |_| on_close.call(()),
-                        Icon { width: 16, height: 16, fill: "currentColor", icon: FiX }
+                        IconX { size: 16 }
                     }
                 }
-                DialogDescription { class: "sr-only", "Search for a food to add to your log" }
                 div { class: "p-6 space-y-3",
                     div { class: "relative",
-                        Icon { class: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground", width: 16, height: 16, fill: "currentColor", icon: FiSearch }
+                        IconSearch { class: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground", size: 16 }
                         input {
                             class: "w-full pl-10 pr-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-sm",
                             placeholder: "Search foods...",

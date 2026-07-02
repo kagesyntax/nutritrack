@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_components::{Card, CardContent};
-use dioxus_free_icons::icons::fi_icons::FiArrowLeft;
-use dioxus_free_icons::Icon;
+
+use crate::components::card::{Card, CardContent};
+use crate::components::icons::IconArrowLeft;
 
 use crate::state::food_db::find_food;
 use crate::state::models::DayLog;
@@ -73,7 +73,7 @@ pub fn MealDetail(id: String) -> Element {
                 to: crate::app::Route::Log {},
                 button {
                     class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors",
-                    Icon { width: 16, height: 16, fill: "currentColor", icon: FiArrowLeft }
+                    IconArrowLeft { size: 16 }
                     "Back to Log"
                 }
             }

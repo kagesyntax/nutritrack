@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_components::{
-    Card, CardContent, Empty, EmptyDescription, EmptyHeader, EmptyTitle,
-};
-use dioxus_free_icons::icons::fi_icons::FiCalendar;
-use dioxus_free_icons::Icon;
+
+use crate::components::card::{Card, CardContent};
+use crate::components::icons::IconCalendar;
 
 use crate::state::food_db::find_food;
 use crate::state::models::DayLog;
@@ -20,11 +18,10 @@ pub fn History() -> Element {
             h1 { class: "text-2xl font-bold text-foreground font-heading", "History" }
 
             if sorted.is_empty() {
-                Empty {
-                    class: "border border-dashed rounded-lg",
-                    EmptyHeader {
-                        EmptyTitle { "No food logs yet" }
-                        EmptyDescription { "Start tracking to see your history here." }
+                div { class: "border-2 border-dashed border-border rounded-xl p-12 text-center",
+                    div { class: "flex flex-col items-center gap-2",
+                        p { class: "text-lg font-medium text-foreground", "No food logs yet" }
+                        p { class: "text-sm text-muted-foreground", "Start tracking to see your history here." }
                     }
                 }
             } else {
@@ -58,7 +55,7 @@ fn DayCard(day: DayLog) -> Element {
                 CardContent { class: "flex items-center justify-between",
                     div { class: "flex items-center gap-3",
                         div { class: "w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-muted-foreground",
-                            Icon { width: 18, height: 18, fill: "currentColor", icon: FiCalendar }
+                            IconCalendar { size: 18 }
                         }
                         div {
                             p { class: "font-medium text-card-foreground", "{day.date}" }

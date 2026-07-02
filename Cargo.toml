@@ -6,8 +6,6 @@ edition = "2021"
 
 [dependencies]
 dioxus = { version = "0.7.1", features = ["router"] }
-dioxus_components = "0.1.2"
-dioxus-free-icons = { version = "0.10", features = ["feather"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 js-sys = "0.3"

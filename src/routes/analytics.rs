@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
-use dioxus_components::{
-    Card, CardContent, CardHeader, CardTitle,
-};
+
+use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
 
 use crate::state::food_db::find_food;
 

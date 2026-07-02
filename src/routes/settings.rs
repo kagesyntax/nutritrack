@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_components::{
-    Button, ButtonVariant, Card, CardContent, CardHeader, CardTitle,
-};
+
+use crate::components::button::{Button, ButtonVariant};
+use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
 
 #[component]
 pub fn Settings() -> Element {
