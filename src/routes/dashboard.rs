@@ -101,6 +101,8 @@ pub fn Dashboard() -> Element {
         0
     };
 
+    let remaining = target_cal - total_cal;
+
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
         let cursor = js_sys::Date::new_0();
@@ -183,6 +185,15 @@ pub fn Dashboard() -> Element {
                                         span { class: "calorie-hero-value", "{total_cal:.0}" }
                                         span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
+                                    div { class: "flex items-center gap-2 mt-2",
+                                        div { class: "macro-bar-track", style: "flex: 1",
+                                            div {
+                                                class: "macro-bar-fill bg-primary",
+                                                style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
+                                            }
+                                        }
+                                        span { class: "text-xs font-medium tabular-nums", "{(total_cal / target_cal * 100.0):.0}%" }
+                                    }
                                     div { class: "calorie-hero-sparkline",
                                         div { class: "sparkline",
                                             for (_, _, pct, spark_color) in &week_spark {
@@ -193,6 +204,7 @@ pub fn Dashboard() -> Element {
                                             }
                                         }
                                     }
+                                    span { class: "text-xs text-muted-foreground", "Remaining: {remaining:.0} kcal" }
                                 }
                             }
                         }
