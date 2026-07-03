@@ -1,11 +1,7 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Dialog(
-    show: bool,
-    onclose: Option<EventHandler<MouseEvent>>,
-    children: Element,
-) -> Element {
+pub fn Dialog(show: bool, onclose: Option<EventHandler<MouseEvent>>, children: Element) -> Element {
     if !show {
         return VNode::empty();
     }
