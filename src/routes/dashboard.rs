@@ -101,7 +101,6 @@ pub fn Dashboard() -> Element {
         0
     };
 
-    let remaining = target_cal - total_cal;
 
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
