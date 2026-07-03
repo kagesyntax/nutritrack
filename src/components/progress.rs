@@ -2,7 +2,11 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn CalorieRing(current: f64, target: f64) -> Element {
-    let ratio = if target > 0.0 { (current / target).min(1.0) } else { 0.0 };
+    let ratio = if target > 0.0 {
+        (current / target).min(1.0)
+    } else {
+        0.0
+    };
 
     rsx! {
         div { class: "calorie-ring",
@@ -42,7 +46,11 @@ pub fn MacroBar(
     color: &'static str,
     unit: &'static str,
 ) -> Element {
-    let ratio = if target > 0.0 { (current / target).min(1.0) * 100.0 } else { 0.0 };
+    let ratio = if target > 0.0 {
+        (current / target).min(1.0) * 100.0
+    } else {
+        0.0
+    };
 
     rsx! {
         div { class: "macro-bar",

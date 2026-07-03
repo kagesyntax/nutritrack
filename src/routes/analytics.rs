@@ -116,10 +116,18 @@ pub fn Analytics() -> Element {
         if last_week_avg > 0.0 && this_week_avg > 0.0 {
             let diff = ((this_week_avg - last_week_avg) / last_week_avg) * 100.0;
             let arrow = if diff > 0.0 { "↑" } else { "↓" };
-            let color = if diff > 0.0 { "text-destructive" } else { "text-primary" };
+            let color = if diff > 0.0 {
+                "text-destructive"
+            } else {
+                "text-primary"
+            };
             (arrow, format!("{:.1}% vs last week", diff.abs()), color)
         } else {
-            ("→", "Insufficient data".to_string(), "text-muted-foreground")
+            (
+                "→",
+                "Insufficient data".to_string(),
+                "text-muted-foreground",
+            )
         };
 
     // --- Macro averages ---
@@ -160,38 +168,56 @@ pub fn Analytics() -> Element {
     };
 
     // --- Weekly sparkline (last 7 days) ---
-    let week_spark: Vec<_> = recent.iter().rev().take(7).map(|day| {
-        let cals = day_total_cals(day);
-        let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
-        let spark_color = if pct >= 90.0 && pct <= 110.0 {
-            "var(--color-success)"
-        } else if pct >= 75.0 && pct <= 125.0 {
-            "var(--color-warning)"
-        } else {
-            "var(--color-destructive)"
-        };
-        let label = day.date.get(5..).unwrap_or(&day.date).to_string();
-        (day.date.clone(), label, pct, spark_color)
-    }).collect();
+    let week_spark: Vec<_> = recent
+        .iter()
+        .rev()
+        .take(7)
+        .map(|day| {
+            let cals = day_total_cals(day);
+            let pct = if target > 0.0 {
+                (cals / target) * 100.0
+            } else {
+                0.0
+            };
+            let spark_color = if pct >= 90.0 && pct <= 110.0 {
+                "var(--color-success)"
+            } else if pct >= 75.0 && pct <= 125.0 {
+                "var(--color-warning)"
+            } else {
+                "var(--color-destructive)"
+            };
+            let label = day.date.get(5..).unwrap_or(&day.date).to_string();
+            (day.date.clone(), label, pct, spark_color)
+        })
+        .collect();
 
     // --- Last 30 days for the day strip ---
-    let last_30_days: Vec<_> = recent.iter().rev().take(30).map(|day| {
-        let cals = day_total_cals(day);
-        let has_food = day_has_food(day);
-        let color = if !has_food {
-            "var(--color-surface-tertiary)".to_string()
-        } else {
-            let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
-            if pct >= 90.0 && pct <= 110.0 {
-                "var(--color-success)".to_string()
-            } else if pct >= 75.0 {
-                "var(--color-warning)".to_string()
+    let last_30_days: Vec<_> = recent
+        .iter()
+        .rev()
+        .take(30)
+        .map(|day| {
+            let cals = day_total_cals(day);
+            let has_food = day_has_food(day);
+            let color = if !has_food {
+                "var(--color-surface-tertiary)".to_string()
             } else {
-                "var(--color-destructive)".to_string()
-            }
-        };
-        (day.date.clone(), cals, color)
-    }).collect();
+                let pct = if target > 0.0 {
+                    (cals / target) * 100.0
+                } else {
+                    0.0
+                };
+                if pct >= 90.0 && pct <= 110.0 {
+                    "var(--color-success)".to_string()
+                } else if pct >= 75.0 {
+                    "var(--color-warning)".to_string()
+                } else {
+                    "var(--color-destructive)".to_string()
+                }
+            };
+            (day.date.clone(), cals, color)
+        })
+        .collect();
 
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",

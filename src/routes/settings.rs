@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::{IconSettings, IconSun, IconMoon, IconMonitor};
+use crate::components::icons::{IconMonitor, IconMoon, IconSettings, IconSun};
 use crate::state::models::ThemeMode;
 
 #[component]
@@ -16,7 +16,7 @@ pub fn Settings() -> Element {
                 "Settings"
             }
 
-            Card {
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Theme" }
                     p { class: "text-sm text-muted-foreground mt-1", "Choose your preferred color scheme" }
@@ -26,7 +26,7 @@ pub fn Settings() -> Element {
                 }
             }
 
-            Card {
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Daily Nutrition Targets" }
                     p { class: "text-sm text-muted-foreground mt-1", "Set your daily goals for calories and macronutrients" }
@@ -77,7 +77,7 @@ pub fn Settings() -> Element {
                 }
             }
 
-            Card {
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Data Management" }
                     p { class: "text-sm text-muted-foreground mt-1", "Manage your stored nutrition data" }
@@ -104,10 +104,7 @@ pub fn Settings() -> Element {
 }
 
 #[component]
-fn ThemeSelector(
-    active: ThemeMode,
-    on_select: EventHandler<ThemeMode>,
-) -> Element {
+fn ThemeSelector(active: ThemeMode, on_select: EventHandler<ThemeMode>) -> Element {
     rsx! {
         div { class: "theme-selector",
             ThemeCard {
@@ -168,7 +165,7 @@ fn TargetInput(
     let mut val = use_signal(|| value.to_string());
 
     rsx! {
-        div { class: "bg-card border border-border rounded-lg p-4 space-y-2 transition-all duration-200 hover-shadow-md",
+        div { class: "bg-card border border-border rounded-lg p-4 space-y-2 transition-all duration-200 hover-shadow-md anim-fade-up",
             label { class: "text-sm font-medium text-foreground", "{label}" }
             div { class: "flex items-center gap-2",
                 input {

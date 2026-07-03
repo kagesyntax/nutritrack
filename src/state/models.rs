@@ -11,7 +11,12 @@ pub enum MealType {
 
 impl MealType {
     pub fn all() -> [MealType; 4] {
-        [MealType::Breakfast, MealType::Lunch, MealType::Dinner, MealType::Snack]
+        [
+            MealType::Breakfast,
+            MealType::Lunch,
+            MealType::Dinner,
+            MealType::Snack,
+        ]
     }
 
     pub fn label(&self) -> &str {
@@ -22,7 +27,6 @@ impl MealType {
             MealType::Snack => "Snacks",
         }
     }
-
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -47,7 +51,10 @@ pub struct FoodEntry {
 
 impl FoodEntry {
     pub fn new(food_id: String) -> Self {
-        Self { food_id, servings: 1.0 }
+        Self {
+            food_id,
+            servings: 1.0,
+        }
     }
 }
 

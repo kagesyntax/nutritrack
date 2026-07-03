@@ -69,8 +69,14 @@ pub fn History() -> Element {
     let this_week_dates: Vec<String> = (0..7).map(|i| date_minus_days(&today, i)).collect();
     let last_week_dates: Vec<String> = (7..14).map(|i| date_minus_days(&today, i)).collect();
 
-    let this_week_logs: Vec<&DayLog> = sorted.iter().filter(|d| this_week_dates.contains(&d.date)).collect();
-    let last_week_logs: Vec<&DayLog> = sorted.iter().filter(|d| last_week_dates.contains(&d.date)).collect();
+    let this_week_logs: Vec<&DayLog> = sorted
+        .iter()
+        .filter(|d| this_week_dates.contains(&d.date))
+        .collect();
+    let last_week_logs: Vec<&DayLog> = sorted
+        .iter()
+        .filter(|d| last_week_dates.contains(&d.date))
+        .collect();
 
     let days_logged_this_week = this_week_logs.len();
     let avg_cal_this_week = if days_logged_this_week > 0 {
@@ -147,17 +153,17 @@ pub fn History() -> Element {
         .collect();
 
     rsx! {
-        div { class: "max-w-4xl mx-auto p-6 space-y-6",
+        div { class: "max-w-4xl mx-auto p-6 space-y-6 anim-history-entrance", style: "--entrance-delay: 200ms",
             h1 { class: "text-2xl font-bold text-foreground font-heading", "History" }
 
-            div { class: "stat-compact-row mb-4",
+            div { class: "stat-compact-row anim-history-entrance", style: "--entrance-delay: 240ms",
                 CompactStat { value: format!("{:.0}", avg_cal_this_week), label: "avg kcal" }
                 CompactStat { value: format!("{}/7", days_logged_this_week), label: "logged" }
                 CompactStat { value: format!("{:.0}", best_day_cal), label: "best day" }
                 CompactStat { value: trend_str, label: "vs last week" }
             }
 
-            div { class: "flex flex-col gap-2 mb-4",
+            div { class: "flex flex-col gap-2 mb-4 anim-history-entrance", style: "--entrance-delay: 320ms",
                 span { class: "text-sm font-medium text-foreground font-heading", "Last 30 Days" }
                 div { class: "cal-grid",
                     div { class: "cal-label", "Su" }
@@ -207,12 +213,12 @@ pub fn History() -> Element {
             }
 
             if sorted.is_empty() {
-                div { class: "text-center py-12",
+                div { class: "text-center py-12 anim-history-entrance", style: "--entrance-delay: 380ms",
                     p { class: "text-lg font-medium text-foreground", "No food logs yet" }
                     p { class: "text-sm text-muted-foreground mt-1", "Start tracking to see your history here." }
                 }
             } else {
-                div { class: "compact-list",
+                div { class: "compact-list anim-history-entrance", style: "--entrance-delay: 380ms",
                     for day in sorted.iter().take(30) {
                         DayRow { day: day.clone() }
                     }
@@ -232,7 +238,13 @@ fn DayRow(day: DayLog) -> Element {
     } else {
         0.0
     };
-    let dot_color = if pct > 100.0 { "bg-fat" } else if pct > 75.0 { "bg-primary" } else { "bg-muted" };
+    let dot_color = if pct > 100.0 {
+        "bg-fat"
+    } else if pct > 75.0 {
+        "bg-primary"
+    } else {
+        "bg-muted"
+    };
 
     rsx! {
         Link {
