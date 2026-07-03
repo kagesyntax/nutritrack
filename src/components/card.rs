@@ -1,26 +1,32 @@
 use dioxus::prelude::*;
 
+#[derive(Clone, PartialEq)]
+pub enum CardSize {
+    Sm,
+}
+
 #[component]
 pub fn Card(
     onclick: Option<EventHandler<MouseEvent>>,
     class: Option<&'static str>,
+    size: Option<CardSize>,
     children: Element,
 ) -> Element {
     let is_clickable = onclick.is_some();
     let hover = "cursor-pointer group transition-all duration-200 hover:shadow-md hover:-translate-y-0_5";
-    let base = class.map(|c| {
-        if is_clickable {
-            format!("card {} {}", c, hover)
-        } else {
-            format!("card {}", c)
+    let mut classes = vec!["card"];
+    if let Some(c) = class {
+        classes.push(c);
+    }
+    if let Some(s) = size {
+        match s {
+            CardSize::Sm => classes.push("card-sm"),
         }
-    }).unwrap_or_else(|| {
-        if is_clickable {
-            format!("card {}", hover)
-        } else {
-            "card".to_string()
-        }
-    });
+    }
+    if is_clickable {
+        classes.push(hover);
+    }
+    let base = classes.join(" ");
     rsx! {
         div {
             class: "{base}",

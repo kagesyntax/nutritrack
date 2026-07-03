@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 
-use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::{IconBarChart2, IconChevronRight, IconCoffee, IconFlame, IconMoon, IconSun, IconSunrise};
-use crate::components::progress::{CalorieRing, MacroBar};
+use crate::components::card::{Card, CardContent, CardSize};
+use crate::components::icons::{IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise};
+use crate::components::progress::CalorieRing;
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
 use crate::utils::{meal_total_calories, todays_date};
@@ -18,7 +18,7 @@ pub fn Dashboard() -> Element {
         .map(|dl| dl.meals.into_values().collect())
         .unwrap_or_default();
 
-    let total_cal = meals.iter().map(|m| meal_total_calories(m)).sum();
+    let total_cal: f64 = meals.iter().map(|m| meal_total_calories(m)).sum();
     let target_cal = settings.read().targets.calories;
     let targets = settings.read().targets.clone();
 
@@ -103,6 +103,49 @@ pub fn Dashboard() -> Element {
 
     let remaining = target_cal - total_cal;
 
+    let week_spark: Vec<(String, f64, f64, String)> = {
+        let mut days = Vec::new();
+        let cursor = js_sys::Date::new_0();
+        for _ in 0..7 {
+            let date_str = format!(
+                "{:04}-{:02}-{:02}",
+                cursor.get_full_year(),
+                cursor.get_month() + 1,
+                cursor.get_date(),
+            );
+            let cals = logs
+                .read()
+                .iter()
+                .find(|l| l.date == date_str)
+                .map(|dl| {
+                    dl.meals
+                        .values()
+                        .flat_map(|m| &m.entries)
+                        .filter_map(|e| {
+                            let servings = e.servings;
+                            find_food(&e.food_id).map(|f| f.calories * servings)
+                        })
+                        .sum::<f64>()
+                })
+                .unwrap_or(0.0);
+            let pct = if target_cal > 0.0 {
+                (cals / target_cal) * 100.0
+            } else {
+                0.0
+            };
+            let color = if pct >= 90.0 && pct <= 110.0 {
+                "#22c55e"
+            } else if pct >= 75.0 {
+                "#eab308"
+            } else {
+                "#ef4444"
+            };
+            days.push((date_str, cals, pct, color.to_string()));
+            cursor.set_date(cursor.get_date() - 1);
+        }
+        days
+    };
+
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
             div { class: "flex items-center justify-between",
@@ -118,71 +161,89 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            div { class: "flex flex-wrap gap-3",
+            div { class: "flex items-center gap-2 flex-wrap",
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
                 }
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-surface-secondary text-foreground text-xs font-medium",
-                    IconBarChart2 { size: 14 }
+                    IconActivity { size: 14 }
                     span { "{consistency}% this month" }
                 }
             }
 
-            div { class: "grid grid-cols-1 md-grid-cols-3 gap-6",
-                Card { class: "md-col-span-1",
-                    CardContent { class: "py-6",
-                        div { class: "flex flex-col items-center",
-                            CalorieRing { current: total_cal, target: target_cal }
-                            if total_cal < target_cal {
-                                p { class: "text-sm text-muted-foreground mt-2", "{remaining:.0} kcal remaining" }
-                                div { class: "macro-bar-track mt-1 w-4/5",
-                                    div {
-                                        class: "macro-bar-fill bg-primary",
-                                        style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
+            div { class: "bento-grid",
+                div { class: "bento-hero",
+                    Card { size: CardSize::Sm,
+                        CardContent {
+                            div { class: "calorie-hero",
+                                div { class: "calorie-hero-ring",
+                                    CalorieRing { current: total_cal, target: target_cal }
+                                }
+                                div { class: "calorie-hero-info",
+                                    div { class: "flex items-baseline gap-2",
+                                        span { class: "calorie-hero-value", "{total_cal:.0}" }
+                                        span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
+                                    div { class: "flex items-center gap-2 mt-2",
+                                        div { class: "macro-bar-track", style: "flex: 1",
+                                            div {
+                                                class: "macro-bar-fill bg-primary",
+                                                style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
+                                            }
+                                        }
+                                        span { class: "text-xs font-medium tabular-nums", "{(total_cal / target_cal * 100.0):.0}%" }
+                                    }
+                                    div { class: "calorie-hero-sparkline",
+                                        div { class: "sparkline",
+                                            for (_, _, pct, spark_color) in &week_spark {
+                                                div {
+                                                    class: "sparkline-bar",
+                                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
+                                                }
+                                            }
+                                        }
+                                    }
+                                    span { class: "text-xs text-muted-foreground", "Remaining: {remaining:.0} kcal" }
                                 }
                             }
                         }
                     }
                 }
 
-                Card { class: "md-col-span-2",
-                    CardHeader {
-                        CardTitle { class: "font-heading", "Today's Macros" }
-                    }
-                    CardContent {
-                        div { class: "space-y-3",
-                            MacroBar { label: "Protein", current: total_p, target: targets.protein_g, color: "bg-protein", unit: "g" }
-                            MacroBar { label: "Carbs", current: total_c, target: targets.carbs_g, color: "bg-carbs", unit: "g" }
-                            MacroBar { label: "Fat", current: total_f, target: targets.fat_g, color: "bg-fat", unit: "g" }
-                            MacroBar { label: "Fiber", current: total_fiber, target: targets.fiber_g, color: "bg-fiber", unit: "g" }
-                        }
-                    }
-                }
-            }
-
-            Card {
-                CardHeader {
-                    CardTitle { class: "font-heading", "Daily Goals" }
-                }
-                CardContent {
-                    div { class: "grid grid-cols-2 md-grid-cols-4 gap-3",
-                        GoalCircle { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein" }
-                        GoalCircle { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs" }
-                        GoalCircle { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat" }
-                        GoalCircle { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber" }
-                    }
+                div { class: "bento-grid",
+                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
+                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
+                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
+                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber" }
                 }
             }
 
             h2 { class: "text-lg font-semibold text-foreground font-heading", "Today's Meals" }
-            div { class: "space-y-3",
+            div { class: "timeline",
                 for (meal_type, cals, count) in &meal_summaries {
-                    Link {
-                        to: crate::app::Route::Log {},
-                        class: "block group",
-                        MealSummaryCard { meal_type: meal_type.clone(), calories: *cals, item_count: *count }
+                    if *count == 0 {
+                        Link {
+                            to: crate::app::Route::Log {},
+                            class: "timeline-add",
+                            IconPlus { size: 14 }
+                            span { "Add {meal_type.label()}" }
+                        }
+                    } else {
+                        Link {
+                            to: crate::app::Route::Log {},
+                            class: "timeline-item",
+                            div { class: "timeline-icon",
+                                match meal_type {
+                                    MealType::Breakfast => rsx! { IconSunrise { size: 16 } },
+                                    MealType::Lunch => rsx! { IconSun { size: 16 } },
+                                    MealType::Dinner => rsx! { IconMoon { size: 16 } },
+                                    MealType::Snack => rsx! { IconCoffee { size: 16 } },
+                                }
+                            }
+                            span { class: "timeline-name", "{meal_type.label()}" }
+                            span { class: "timeline-cals", "{cals:.0} kcal" }
+                        }
                     }
                 }
             }
@@ -191,54 +252,16 @@ pub fn Dashboard() -> Element {
 }
 
 #[component]
-fn GoalCircle(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str) -> Element {
+fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
     rsx! {
-        div { class: "text-center p-3 rounded-lg bg-surface-secondary",
-            p { class: "text-xs text-muted-foreground", "{label}" }
-            p { class: "text-lg font-bold tabular-nums text-foreground mt-1", "{current:.0}" }
-            p { class: "text-xs text-muted-foreground", "/ {target:.0} {unit}" }
-            div { class: "macro-bar-track mt-2",
-                div {
-                    class: "macro-bar-fill {color}",
-                    style: "width: {pct:.0}%",
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn MealSummaryCard(meal_type: MealType, calories: f64, item_count: usize) -> Element {
-    let cals_text = format!("{:.0} kcal", calories);
-    let count_text = if item_count == 0 {
-        "No items logged".to_string()
-    } else {
-        format!("{} item(s)", item_count)
-    };
-
-    let meal_icon = match meal_type {
-        MealType::Breakfast => rsx! { IconSunrise { size: 20 } },
-        MealType::Lunch => rsx! { IconSun { size: 20 } },
-        MealType::Dinner => rsx! { IconMoon { size: 20 } },
-        MealType::Snack => rsx! { IconCoffee { size: 20 } },
-    };
-
-    rsx! {
-        Card { class: "group-hover-shadow-md group-hover--translate-y-0_5 transition-all duration-200 cursor-pointer",
-            CardContent { class: "flex items-center justify-between",
-                div { class: "flex items-center gap-3",
-                    div { class: "meal-icon",
-                        {meal_icon}
-                    }
-                    div {
-                        p { class: "font-medium text-card-foreground", "{meal_type.label()}" }
-                        p { class: "text-xs text-muted-foreground", "{count_text}" }
-                    }
-                }
-                div { class: "flex items-center gap-2",
-                    span { class: "text-sm font-semibold tabular-nums text-card-foreground", "{cals_text}" }
-                    IconChevronRight { size: 16 }
+        Card { size: CardSize::Sm,
+            CardContent { class: "text-center",
+                p { class: "text-xs text-muted-foreground uppercase tracking-wider", "{label}" }
+                p { class: "text-xl font-bold tabular-nums {text_color} mt-1", "{current:.0}" }
+                p { class: "text-xs text-muted-foreground", "/ {target:.0} {unit}" }
+                div { class: "macro-bar-track mt-2",
+                    div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
                 }
             }
         }
