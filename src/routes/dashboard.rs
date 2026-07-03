@@ -1,8 +1,10 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardSize};
-use crate::components::icons::{IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise};
-use crate::components::progress::CalorieRing;
+use crate::components::icons::{
+    IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise,
+};
+use crate::components::progress::{CalorieRing, RingAnim};
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
 use crate::utils::{meal_total_calories, todays_date};
@@ -101,8 +103,6 @@ pub fn Dashboard() -> Element {
         0
     };
 
-
-
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
         let cursor = js_sys::Date::new_0();
@@ -162,7 +162,7 @@ pub fn Dashboard() -> Element {
             }
 
             div { class: "flex items-center gap-2 flex-wrap mb-6",
-                div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
+                div { class: if streak > 0 { "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium anim-streak-pulse" } else { "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium" },
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
                 }
@@ -178,22 +178,23 @@ pub fn Dashboard() -> Element {
                         CardContent {
                             div { class: "calorie-hero",
                                 div { class: "calorie-hero-ring",
-                                    CalorieRing { current: total_cal, target: target_cal }
+                                    CalorieRing { current: total_cal, target: target_cal, anim: RingAnim::On }
                                 }
                                 div { class: "calorie-hero-info",
                                     div { class: "flex items-baseline gap-2",
                                         span { class: "calorie-hero-value", "{total_cal:.0}" }
                                         span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
-                                    div { class: "calorie-hero-sparkline",
-                                        div { class: "sparkline",
-                                            for (_, _, pct, spark_color) in &week_spark {
-                                                div {
-                                                    class: "sparkline-bar",
-                                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
-                                                }
+                                div { class: "calorie-hero-sparkline",
+                                    div { class: "sparkline",
+                                        for (i, (_, _, pct, spark_color)) in week_spark.iter().enumerate() {
+                                            div {
+                                                class: "sparkline-bar anim-sparkline-bar",
+                                                style: "height: {pct.min(100.0):.0}%; background: {spark_color}; animation-delay: {i * 50}ms",
                                             }
                                         }
+                                    }
+                                        div { class: "text-xs text-muted-foreground mt-1", "7-day trend" }
                                     }
                                 }
                             }
@@ -202,15 +203,15 @@ pub fn Dashboard() -> Element {
                 }
 
                 div { class: "macro-grid",
-                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
-                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
-                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
-                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber" }
+                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein", index: 0 }
+                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs", index: 1 }
+                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat", index: 2 }
+                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber", index: 3 }
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
-            div { class: "timeline",
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4 anim-dashboard-entrance", style: "--entrance-delay: 400ms", "Today's Meals" }
+            div { class: "timeline anim-dashboard-entrance", style: "--entrance-delay: 400ms",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
                         Link {
@@ -242,10 +243,24 @@ pub fn Dashboard() -> Element {
 }
 
 #[component]
-fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
-    let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
+fn MacroTile(
+    label: &'static str,
+    current: f64,
+    target: f64,
+    unit: &'static str,
+    color: &'static str,
+    text_color: &'static str,
+    index: usize,
+) -> Element {
+    let pct = if target > 0.0 {
+        (current / target * 100.0).min(100.0)
+    } else {
+        0.0
+    };
+    let delay_ms = index * 100;
     rsx! {
         Card {
+            class: "anim-macro-tile",
             CardContent { class: "macro-tile-content",
                 div { class: "macro-tile-header",
                     div { class: "macro-tile-dot {color}" }
@@ -253,11 +268,19 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
                 }
                 div { class: "macro-tile-values",
                     span { class: "macro-tile-current {text_color}", "{current:.0}" }
-                    span { class: "macro-tile-target", "/ {target:.0} {unit}" }
+                    span { class: "macro-tile-target", "of {target:.0} {unit}" }
                 }
                 div { class: "macro-tile-bar-row",
                     div { class: "macro-bar-track",
-                        div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+                        div {
+                            class: "macro-bar-fill {color} anim-progress-bar-fill",
+                            style: "width: {pct:.0}%; --bar-delay: {delay_ms}ms",
+                            role: "progressbar",
+                            aria_valuenow: "{pct:.0}",
+                            aria_valuemin: "0",
+                            aria_valuemax: "100",
+                            aria_label: "{label} progress: {pct:.0} percent",
+                        }
                     }
                     span { class: "macro-tile-pct", "{pct:.0}%" }
                 }

@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::app::Route;
-use crate::components::icons::{
-    IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings,
-};
+use crate::components::icons::{IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings};
 
 #[component]
 pub fn AppShell() -> Element {
@@ -11,7 +9,9 @@ pub fn AppShell() -> Element {
         div { class: "app-shell",
             Sidebar {}
             main { class: "main-content",
-                Outlet::<Route> {}
+                div { class: "page-transition page-transition-enter",
+                    Outlet::<Route> {}
+                }
             }
             MobileBottomNav {}
         }

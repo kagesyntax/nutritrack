@@ -1,11 +1,7 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Dialog(
-    show: bool,
-    onclose: Option<EventHandler<MouseEvent>>,
-    children: Element,
-) -> Element {
+pub fn Dialog(show: bool, onclose: Option<EventHandler<MouseEvent>>, children: Element) -> Element {
     if !show {
         return VNode::empty();
     }
@@ -13,6 +9,7 @@ pub fn Dialog(
         div {
             class: "dialog-overlay",
             onclick: move |e| {
+                e.stop_propagation();
                 if let Some(cb) = &onclose {
                     cb.call(e);
                 }
@@ -24,7 +21,9 @@ pub fn Dialog(
 
 #[component]
 pub fn DialogContent(class: Option<&'static str>, children: Element) -> Element {
-    let base = class.map(|c| format!("dialog-content {}", c)).unwrap_or_else(|| "dialog-content".to_string());
+    let base = class
+        .map(|c| format!("dialog-content {}", c))
+        .unwrap_or_else(|| "dialog-content".to_string());
     rsx! {
         div {
             class: "{base}",

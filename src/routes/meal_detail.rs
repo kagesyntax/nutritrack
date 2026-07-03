@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::{IconArrowLeft, IconCoffee, IconMinus, IconMoon, IconPlus, IconSun, IconSunrise};
+use crate::components::icons::{
+    IconArrowLeft, IconCoffee, IconMinus, IconMoon, IconPlus, IconSun, IconSunrise,
+};
 use crate::state::food_db::find_food;
 use crate::state::models::{DayLog, FoodEntry, UserSettings};
 
@@ -43,28 +45,64 @@ pub fn MealDetail(id: String) -> Element {
 
     let m_entries = meal.entries.clone();
 
-    let total_cals: f64 = m_entries.iter().map(|e| {
-        find_food(&e.food_id).map(|f| f.calories * e.servings).unwrap_or(0.0)
-    }).sum();
+    let total_cals: f64 = m_entries
+        .iter()
+        .map(|e| {
+            find_food(&e.food_id)
+                .map(|f| f.calories * e.servings)
+                .unwrap_or(0.0)
+        })
+        .sum();
 
-    let total_protein: f64 = m_entries.iter().map(|e| {
-        find_food(&e.food_id).map(|f| f.protein_g * e.servings).unwrap_or(0.0)
-    }).sum();
+    let total_protein: f64 = m_entries
+        .iter()
+        .map(|e| {
+            find_food(&e.food_id)
+                .map(|f| f.protein_g * e.servings)
+                .unwrap_or(0.0)
+        })
+        .sum();
 
-    let total_carbs: f64 = m_entries.iter().map(|e| {
-        find_food(&e.food_id).map(|f| f.carbs_g * e.servings).unwrap_or(0.0)
-    }).sum();
+    let total_carbs: f64 = m_entries
+        .iter()
+        .map(|e| {
+            find_food(&e.food_id)
+                .map(|f| f.carbs_g * e.servings)
+                .unwrap_or(0.0)
+        })
+        .sum();
 
-    let total_fat: f64 = m_entries.iter().map(|e| {
-        find_food(&e.food_id).map(|f| f.fat_g * e.servings).unwrap_or(0.0)
-    }).sum();
+    let total_fat: f64 = m_entries
+        .iter()
+        .map(|e| {
+            find_food(&e.food_id)
+                .map(|f| f.fat_g * e.servings)
+                .unwrap_or(0.0)
+        })
+        .sum();
 
     let targets = settings.read().targets.clone();
 
-    let cal_pct = if targets.calories > 0.0 { (total_cals / targets.calories * 100.0).min(100.0) } else { 0.0 };
-    let protein_pct = if targets.protein_g > 0.0 { (total_protein / targets.protein_g * 100.0).min(100.0) } else { 0.0 };
-    let carbs_pct = if targets.carbs_g > 0.0 { (total_carbs / targets.carbs_g * 100.0).min(100.0) } else { 0.0 };
-    let fat_pct = if targets.fat_g > 0.0 { (total_fat / targets.fat_g * 100.0).min(100.0) } else { 0.0 };
+    let cal_pct = if targets.calories > 0.0 {
+        (total_cals / targets.calories * 100.0).min(100.0)
+    } else {
+        0.0
+    };
+    let protein_pct = if targets.protein_g > 0.0 {
+        (total_protein / targets.protein_g * 100.0).min(100.0)
+    } else {
+        0.0
+    };
+    let carbs_pct = if targets.carbs_g > 0.0 {
+        (total_carbs / targets.carbs_g * 100.0).min(100.0)
+    } else {
+        0.0
+    };
+    let fat_pct = if targets.fat_g > 0.0 {
+        (total_fat / targets.fat_g * 100.0).min(100.0)
+    } else {
+        0.0
+    };
 
     let meal_type_str = meal.meal_type.label();
 
@@ -201,7 +239,8 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
     let inc_date = day_date.clone();
     let inc_mid = meal_id.clone();
 
-    let servings_str = format!("{:.1}", entry.servings);
+    let mut servings = entry.servings;
+    let mut servings_str = format!("{:.1}", entry.servings);
 
     let cals_total = food
         .as_ref()
@@ -258,7 +297,7 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
                         },
                         IconMinus { size: 14 }
                     }
-                    span { class: "serving-value", "{servings_str}" }
+                    span { class: "serving-value anim-serving-pop", "{servings_str}" }
                     button {
                         class: "serving-btn",
                         onclick: move |_| {

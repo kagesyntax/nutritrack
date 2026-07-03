@@ -47,24 +47,40 @@ pub fn Log() -> Element {
     let settings = use_context::<Signal<UserSettings>>();
     let target = settings.read().targets.calories;
 
-    let total_cal: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
-        find_food(&e.food_id).map(|f| f.calories * e.servings)
-    }).sum();
+    let total_cal: f64 = meals
+        .iter()
+        .filter_map(|(_, m)| m.as_ref())
+        .flat_map(|m| &m.entries)
+        .filter_map(|e| find_food(&e.food_id).map(|f| f.calories * e.servings))
+        .sum();
 
-    let total_p: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
-        find_food(&e.food_id).map(|f| f.protein_g * e.servings)
-    }).sum();
+    let total_p: f64 = meals
+        .iter()
+        .filter_map(|(_, m)| m.as_ref())
+        .flat_map(|m| &m.entries)
+        .filter_map(|e| find_food(&e.food_id).map(|f| f.protein_g * e.servings))
+        .sum();
 
-    let total_c: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
-        find_food(&e.food_id).map(|f| f.carbs_g * e.servings)
-    }).sum();
+    let total_c: f64 = meals
+        .iter()
+        .filter_map(|(_, m)| m.as_ref())
+        .flat_map(|m| &m.entries)
+        .filter_map(|e| find_food(&e.food_id).map(|f| f.carbs_g * e.servings))
+        .sum();
 
-    let total_f: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
-        find_food(&e.food_id).map(|f| f.fat_g * e.servings)
-    }).sum();
+    let total_f: f64 = meals
+        .iter()
+        .filter_map(|(_, m)| m.as_ref())
+        .flat_map(|m| &m.entries)
+        .filter_map(|e| find_food(&e.food_id).map(|f| f.fat_g * e.servings))
+        .sum();
 
     let remaining = target - total_cal;
-    let remaining_color = if remaining > 0.0 { "text-primary" } else { "text-fat" };
+    let remaining_color = if remaining > 0.0 {
+        "text-primary"
+    } else {
+        "text-fat"
+    };
     let pct = total_cal / target;
 
     rsx! {
@@ -122,9 +138,10 @@ pub fn Log() -> Element {
 #[component]
 fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
     let mut show_search = use_signal(|| false);
-    let cals = meal.as_ref().map(|m| {
-        m.entries.iter().map(|e| entry_calories(e)).sum::<f64>()
-    }).unwrap_or(0.0);
+    let cals = meal
+        .as_ref()
+        .map(|m| m.entries.iter().map(|e| entry_calories(e)).sum::<f64>())
+        .unwrap_or(0.0);
 
     let mut nut_vals = [0.0_f64; 4];
     if let Some(m) = &meal {
@@ -316,10 +333,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
 }
 
 #[component]
-fn FoodSearchModal(
-    meal_type: MealType,
-    on_close: EventHandler<()>,
-) -> Element {
+fn FoodSearchModal(meal_type: MealType, on_close: EventHandler<()>) -> Element {
     let mut query = use_signal(|| String::new());
     let mut results = use_signal(|| Vec::<FoodItem>::new());
     let mut logs = use_context::<Signal<Vec<crate::state::models::DayLog>>>();
@@ -366,7 +380,10 @@ fn FoodSearchModal(
         let mut items = Vec::new();
         for food in results.iter() {
             let cals_str = format!("{:.0} kcal", food.calories);
-            let macro_str = format!("P {:.0} / C {:.0} / F {:.0}", food.protein_g, food.carbs_g, food.fat_g);
+            let macro_str = format!(
+                "P {:.0} / C {:.0} / F {:.0}",
+                food.protein_g, food.carbs_g, food.fat_g
+            );
             let name = food.name.clone();
             let brand = food.brand.clone();
             let id = food.id.clone();
