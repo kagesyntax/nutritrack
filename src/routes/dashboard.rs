@@ -162,7 +162,7 @@ pub fn Dashboard() -> Element {
             }
 
             div { class: "flex items-center gap-2 flex-wrap mb-6",
-                div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
+                div { class: if streak > 0 { "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium anim-streak-pulse" } else { "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium" },
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
                 }
@@ -185,15 +185,15 @@ pub fn Dashboard() -> Element {
                                         span { class: "calorie-hero-value", "{total_cal:.0}" }
                                         span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
-                                    div { class: "calorie-hero-sparkline",
-                                        div { class: "sparkline",
-                                            for (_, _, pct, spark_color) in &week_spark {
-                                                div {
-                                                    class: "sparkline-bar",
-                                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
-                                                }
+                                div { class: "calorie-hero-sparkline",
+                                    div { class: "sparkline",
+                                        for (i, (_, _, pct, spark_color)) in week_spark.iter().enumerate() {
+                                            div {
+                                                class: "sparkline-bar anim-sparkline-bar",
+                                                style: "height: {pct.min(100.0):.0}%; background: {spark_color}; animation-delay: {i * 50}ms",
                                             }
                                         }
+                                    }
                                         div { class: "text-xs text-muted-foreground mt-1", "7-day trend" }
                                     }
                                 }
@@ -203,10 +203,10 @@ pub fn Dashboard() -> Element {
                 }
 
                 div { class: "macro-grid",
-                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
-                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
-                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
-                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber" }
+                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein", index: 0 }
+                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs", index: 1 }
+                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat", index: 2 }
+                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber", index: 3 }
                 }
             }
 
@@ -243,8 +243,9 @@ pub fn Dashboard() -> Element {
 }
 
 #[component]
-fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
+fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str, index: usize) -> Element {
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
+    let delay_ms = index * 100;
     rsx! {
         Card {
             CardContent { class: "macro-tile-content",
@@ -258,7 +259,15 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
                 }
                 div { class: "macro-tile-bar-row",
                     div { class: "macro-bar-track",
-                        div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+                        div {
+                            class: "macro-bar-fill {color} anim-progress-bar-fill",
+                            style: "width: {pct:.0}%; --bar-delay: {delay_ms}ms",
+                            role: "progressbar",
+                            aria_valuenow: "{pct:.0}",
+                            aria_valuemin: "0",
+                            aria_valuemax: "100",
+                            aria_label: "{label} progress: {pct:.0} percent",
+                        }
                     }
                     span { class: "macro-tile-pct", "{pct:.0}%" }
                 }
