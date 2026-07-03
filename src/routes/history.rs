@@ -108,15 +108,26 @@ pub fn History() -> Element {
             let (cals, color) = match log {
                 Some(l) => {
                     let c = day_total_cal(l);
-                    if c >= target_cal * 0.9 && c <= target_cal * 1.1 {
-                        (c, "bg-primary")
-                    } else if c > target_cal * 0.75 {
-                        (c, "bg-carbs")
+                    if target_cal > 0.0 {
+                        let pct = c / target_cal;
+                        if pct > 1.1 {
+                            (c, "cal-dot-over")
+                        } else if pct >= 0.9 {
+                            (c, "cal-dot-high")
+                        } else if pct > 0.5 {
+                            (c, "cal-dot-medium")
+                        } else if c > 0.0 {
+                            (c, "cal-dot-low")
+                        } else {
+                            (c, "cal-dot-none")
+                        }
+                    } else if c > 0.0 {
+                        (c, "cal-dot-medium")
                     } else {
-                        (c, "bg-muted")
+                        (c, "cal-dot-none")
                     }
                 }
-                None => (0.0, "bg-surface-tertiary"),
+                None => (0.0, "cal-dot-none"),
             };
             HeatmapDay {
                 date: d,
