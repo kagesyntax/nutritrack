@@ -3,6 +3,7 @@ name = "NutriTrack"
 
 [web.app]
 title = "NutriTrack"
+favicon = "assets/favicon.ico"
 
 [web.resource]
 style = ["assets/main.css"]

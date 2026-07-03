@@ -96,6 +96,7 @@ pub fn App() -> Element {
     use_context_provider(|| settings);
 
     rsx! {
+        document::Link { rel: "icon", href: asset!("/assets/favicon.ico") }
         document::Link { rel: "stylesheet", href: asset!("/assets/main.css") }
         Router::<Route> {}
     }
