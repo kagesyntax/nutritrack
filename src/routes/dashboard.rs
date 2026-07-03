@@ -248,6 +248,7 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
     let delay_ms = index * 100;
     rsx! {
         Card {
+            class: "anim-macro-tile",
             CardContent { class: "macro-tile-content",
                 div { class: "macro-tile-header",
                     div { class: "macro-tile-dot {color}" }
