@@ -239,7 +239,8 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
     let inc_date = day_date.clone();
     let inc_mid = meal_id.clone();
 
-    let servings_str = format!("{:.1}", entry.servings);
+    let mut servings = entry.servings;
+    let mut servings_str = format!("{:.1}", entry.servings);
 
     let cals_total = food
         .as_ref()
@@ -296,7 +297,7 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
                         },
                         IconMinus { size: 14 }
                     }
-                    span { class: "serving-value", "{servings_str}" }
+                    span { class: "serving-value anim-serving-pop", "{servings_str}" }
                     button {
                         class: "serving-btn",
                         onclick: move |_| {

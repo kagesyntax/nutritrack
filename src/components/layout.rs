@@ -9,7 +9,9 @@ pub fn AppShell() -> Element {
         div { class: "app-shell",
             Sidebar {}
             main { class: "main-content",
-                Outlet::<Route> {}
+                div { class: "page-transition page-transition-enter",
+                    Outlet::<Route> {}
+                }
             }
             MobileBottomNav {}
         }

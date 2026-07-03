@@ -4,7 +4,7 @@ use crate::components::card::{Card, CardContent, CardSize};
 use crate::components::icons::{
     IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise,
 };
-use crate::components::progress::CalorieRing;
+use crate::components::progress::{CalorieRing, RingAnim};
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
 use crate::utils::{meal_total_calories, todays_date};
@@ -178,7 +178,7 @@ pub fn Dashboard() -> Element {
                         CardContent {
                             div { class: "calorie-hero",
                                 div { class: "calorie-hero-ring",
-                                    CalorieRing { current: total_cal, target: target_cal }
+                                    CalorieRing { current: total_cal, target: target_cal, anim: RingAnim::On }
                                 }
                                 div { class: "calorie-hero-info",
                                     div { class: "flex items-baseline gap-2",
