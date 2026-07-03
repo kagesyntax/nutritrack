@@ -16,7 +16,7 @@ pub fn Settings() -> Element {
                 "Settings"
             }
 
-            Card { class: "anim-settings-entrance", style: "--entrance-delay: 0ms;",
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Theme" }
                     p { class: "text-sm text-muted-foreground mt-1", "Choose your preferred color scheme" }
@@ -26,7 +26,7 @@ pub fn Settings() -> Element {
                 }
             }
 
-            Card { class: "anim-settings-entrance", style: "--entrance-delay: 80ms;",
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Daily Nutrition Targets" }
                     p { class: "text-sm text-muted-foreground mt-1", "Set your daily goals for calories and macronutrients" }
@@ -77,7 +77,7 @@ pub fn Settings() -> Element {
                 }
             }
 
-            Card { class: "anim-settings-entrance", style: "--entrance-delay: 160ms;",
+            Card { class: "anim-settings-entrance",
                 CardHeader {
                     CardTitle { class: "font-heading", "Data Management" }
                     p { class: "text-sm text-muted-foreground mt-1", "Manage your stored nutrition data" }
