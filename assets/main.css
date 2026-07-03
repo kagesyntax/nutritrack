@@ -751,9 +751,9 @@ input::placeholder { color: var(--color-muted-foreground); }
 
 
 /* Macro Tile (spacious redesign) */
-.macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.macro-grid { display: grid; grid-template-columns: 1fr; gap: 10px; grid-column: span 2; }
 @media (min-width: 480px) {
-  .macro-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .macro-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; grid-column: span 2; }
 }
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
 .macro-tile-header { display: flex; align-items: center; gap: 8px; }
