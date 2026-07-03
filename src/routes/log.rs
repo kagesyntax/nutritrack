@@ -46,9 +46,9 @@ pub fn Log() -> Element {
 
     let settings = use_context::<Signal<UserSettings>>();
     let target = settings.read().targets.calories;
-    let target_p = settings.read().targets.protein_g;
-    let target_c = settings.read().targets.carbs_g;
-    let target_f = settings.read().targets.fat_g;
+    let _target_p = settings.read().targets.protein_g;
+    let _target_c = settings.read().targets.carbs_g;
+    let _target_f = settings.read().targets.fat_g;
 
     let total_cal: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
         find_food(&e.food_id).map(|f| f.calories * e.servings)
@@ -80,36 +80,31 @@ pub fn Log() -> Element {
             Card {
                 class: "bg-surface-secondary border-0",
                 CardContent { class: "py-3 px-4",
-                    div { class: "flex items-center justify-between flex-wrap gap-2",
-                        div { class: "flex items-center gap-4 flex-wrap",
-                            div { class: "text-center",
-                                p { class: "text-xs text-muted-foreground", "Calories" }
-                                p { class: "text-lg font-bold tabular-nums text-foreground", "{total_cal:.0}" }
-                                p { class: "text-xs text-muted-foreground", "of {target} goal" }
-                            }
-                            div { class: "text-center",
-                                p { class: "text-xs text-muted-foreground", "Remaining" }
-                                p { class: "text-lg font-bold tabular-nums {remaining_color}", "{remaining:.0}" }
-                                p { class: "text-xs text-muted-foreground", "kcal" }
-                            }
-                            div { class: "text-center",
-                                p { class: "text-xs text-muted-foreground", "Protein" }
-                                p { class: "text-lg font-bold tabular-nums text-protein", "{total_p:.0}" }
-                                p { class: "text-xs text-muted-foreground", "of {target_p:.0} g" }
-                            }
-                            div { class: "text-center",
-                                p { class: "text-xs text-muted-foreground", "Carbs" }
-                                p { class: "text-lg font-bold tabular-nums text-carbs", "{total_c:.0}" }
-                                p { class: "text-xs text-muted-foreground", "of {target_c:.0} g" }
-                            }
-                            div { class: "text-center",
-                                p { class: "text-xs text-muted-foreground", "Fat" }
-                                p { class: "text-lg font-bold tabular-nums text-fat", "{total_f:.0}" }
-                                p { class: "text-xs text-muted-foreground", "of {target_f:.0} g" }
-                            }
+                    div { class: "flex items-center gap-3 flex-wrap",
+                        div { class: "flex items-center gap-1_5",
+                            span { class: "text-lg font-bold tabular-nums text-foreground", "{total_cal:.0}" }
+                            span { class: "text-xs text-muted-foreground", "kcal" }
+                        }
+                        span { class: "text-muted-foreground", "·" }
+                        div { class: "flex items-center gap-1_5",
+                            span { class: "text-lg font-bold tabular-nums {remaining_color}", "{remaining:.0}" }
+                            span { class: "text-xs text-muted-foreground", "rem" }
+                        }
+                        span { class: "text-muted-foreground", "·" }
+                        div { class: "flex items-center gap-1_5",
+                            span { class: "text-sm font-semibold tabular-nums text-protein", "{total_p:.0}" }
+                            span { class: "text-xs text-muted-foreground", "P" }
+                        }
+                        div { class: "flex items-center gap-1_5",
+                            span { class: "text-sm font-semibold tabular-nums text-carbs", "{total_c:.0}" }
+                            span { class: "text-xs text-muted-foreground", "C" }
+                        }
+                        div { class: "flex items-center gap-1_5",
+                            span { class: "text-sm font-semibold tabular-nums text-fat", "{total_f:.0}" }
+                            span { class: "text-xs text-muted-foreground", "F" }
                         }
                     }
-                    div { class: "macro-bar-track mt-3",
+                    div { class: "macro-bar-track mt-2",
                         div {
                             class: "macro-bar-fill bg-primary",
                             style: "width: {pct.min(100.0):.0}%",
@@ -129,6 +124,7 @@ pub fn Log() -> Element {
 
 #[component]
 fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
+    let mut show_search = use_signal(|| false);
     let cals = meal.as_ref().map(|m| {
         m.entries.iter().map(|e| entry_calories(e)).sum::<f64>()
     }).unwrap_or(0.0);
@@ -166,7 +162,18 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
             CardContent { class: "pt-0",
                 if let Some(m) = &meal {
                     if m.entries.is_empty() {
-                        p { class: "text-sm text-muted-foreground py-6 text-center", "No food logged yet" }
+                        button {
+                            class: "timeline-add w-full",
+                            onclick: move |_| show_search.set(true),
+                            IconPlus { size: 14 }
+                            span { "Add Food to {meal_type.label()}" }
+                        }
+                        if show_search() {
+                            FoodSearchModal {
+                                meal_type: meal_type,
+                                on_close: move |_| show_search.set(false),
+                            }
+                        }
                     } else {
                         div { class: "divide-y divide-border",
                             for (i, entry) in m.entries.iter().enumerate() {
@@ -188,7 +195,18 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
                         }
                     }
                 } else {
-                    p { class: "text-sm text-muted-foreground py-6 text-center", "Log your first meal of the day" }
+                    button {
+                        class: "timeline-add w-full",
+                        onclick: move |_| show_search.set(true),
+                        IconPlus { size: 14 }
+                        span { "Add Food to {meal_type.label()}" }
+                    }
+                    if show_search() {
+                        FoodSearchModal {
+                            meal_type: meal_type,
+                            on_close: move |_| show_search.set(false),
+                        }
+                    }
                 }
             }
         }
