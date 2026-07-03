@@ -69,8 +69,14 @@ pub fn History() -> Element {
     let this_week_dates: Vec<String> = (0..7).map(|i| date_minus_days(&today, i)).collect();
     let last_week_dates: Vec<String> = (7..14).map(|i| date_minus_days(&today, i)).collect();
 
-    let this_week_logs: Vec<&DayLog> = sorted.iter().filter(|d| this_week_dates.contains(&d.date)).collect();
-    let last_week_logs: Vec<&DayLog> = sorted.iter().filter(|d| last_week_dates.contains(&d.date)).collect();
+    let this_week_logs: Vec<&DayLog> = sorted
+        .iter()
+        .filter(|d| this_week_dates.contains(&d.date))
+        .collect();
+    let last_week_logs: Vec<&DayLog> = sorted
+        .iter()
+        .filter(|d| last_week_dates.contains(&d.date))
+        .collect();
 
     let days_logged_this_week = this_week_logs.len();
     let avg_cal_this_week = if days_logged_this_week > 0 {
@@ -232,7 +238,13 @@ fn DayRow(day: DayLog) -> Element {
     } else {
         0.0
     };
-    let dot_color = if pct > 100.0 { "bg-fat" } else if pct > 75.0 { "bg-primary" } else { "bg-muted" };
+    let dot_color = if pct > 100.0 {
+        "bg-fat"
+    } else if pct > 75.0 {
+        "bg-primary"
+    } else {
+        "bg-muted"
+    };
 
     rsx! {
         Link {
