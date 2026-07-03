@@ -148,7 +148,7 @@ pub fn Dashboard() -> Element {
 
     rsx! {
         div { class: "max-w-4xl mx-auto p-6",
-            div { class: "flex items-center justify-between mb-4",
+            div { class: "flex items-center justify-between mb-4 anim-dashboard-entrance", style: "--entrance-delay: 0ms",
                 div {
                     h1 { class: "text-2xl font-bold text-foreground font-heading", "Dashboard" }
                     p { class: "text-sm text-muted-foreground mt-1", "{today}" }
@@ -161,7 +161,7 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            div { class: "flex items-center gap-2 flex-wrap mb-6",
+            div { class: "flex items-center gap-2 flex-wrap mb-6 anim-dashboard-entrance", style: "--entrance-delay: 100ms",
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
@@ -173,7 +173,7 @@ pub fn Dashboard() -> Element {
             }
 
             div { class: "bento-grid mb-section-lg",
-                div { class: "bento-hero",
+                div { class: "bento-hero anim-dashboard-entrance", style: "--entrance-delay: 200ms",
                     Card { size: CardSize::Sm,
                         CardContent {
                             div { class: "calorie-hero",
@@ -210,8 +210,8 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
-            div { class: "timeline",
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4 anim-dashboard-entrance", style: "--entrance-delay: 400ms", "Today's Meals" }
+            div { class: "timeline anim-dashboard-entrance", style: "--entrance-delay: 400ms",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
                         Link {
@@ -247,6 +247,7 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
     rsx! {
         Card {
+            class: "anim-dashboard-entrance",
             CardContent { class: "macro-tile-content",
                 div { class: "macro-tile-header",
                     div { class: "macro-tile-dot {color}" }
