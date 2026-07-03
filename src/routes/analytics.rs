@@ -240,17 +240,21 @@ pub fn Analytics() -> Element {
                 CardContent { class: "space-y-3",
                     div { class: "flex flex-col gap-2",
                         span { class: "text-sm font-medium text-foreground font-heading", "7-Day Trend" }
-                        div { class: "sparkline",
-                            for (date, _label, pct, spark_color) in &week_spark {
-                                div {
-                                    key: "{date}",
-                                    class: "sparkline-bar",
-                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
-                                    title: "{date}: {pct:.0}% of target",
+                        div { class: "trend-chart",
+                            div { class: "trend-target-line" }
+                            div { class: "trend-bars",
+                                for (date, _label, pct, spark_color) in &week_spark {
+                                    div { key: "{date}", class: "trend-bar-group",
+                                        div {
+                                            class: "trend-bar",
+                                            style: "height: {pct.max(4.0).min(100.0):.0}%; background: {spark_color}",
+                                            title: "{date}: {pct:.0}% of target",
+                                        }
+                                    }
                                 }
                             }
                         }
-                        div { class: "flex justify-between text-xxs text-muted-foreground",
+                        div { class: "trend-labels",
                             for (_, label, _, _) in &week_spark {
                                 span { "{label}" }
                             }

@@ -102,6 +102,7 @@ pub fn Dashboard() -> Element {
     };
 
 
+
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
         let cursor = js_sys::Date::new_0();

@@ -23,6 +23,8 @@
   --color-surface-tertiary: #f0efeb;
   --color-destructive: #ef4444;
   --color-ring: #d97757;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
   --color-protein: #3b82f6;
   --color-carbs: #f59e0b;
   --color-fat: #f43f5e;
@@ -54,6 +56,8 @@
   --color-surface-tertiary: #2a2a2a;
   --color-destructive: #ef4444;
   --color-ring: #e8927a;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
   --color-protein: #60a5fa;
   --color-carbs: #fbbf24;
   --color-fat: #fb7185;
@@ -528,14 +532,14 @@ input::placeholder { color: var(--color-muted-foreground); }
 }
 
 /* Calorie Ring */
-.calorie-ring { position: relative; width: 144px; height: 144px; display: flex; align-items: center; justify-content: center; }
+.calorie-ring { position: relative; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
 .calorie-ring-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
 .calorie-ring-bg { fill: none; stroke: var(--color-surface-tertiary); stroke-width: 8; }
 .calorie-ring-fg { fill: none; stroke: var(--color-primary); stroke-width: 8; stroke-linecap: round; }
 .calorie-ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.calorie-ring-value { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text-primary); font-family: var(--font-mono); }
-.calorie-ring-of { font-size: 12px; color: var(--color-text-tertiary); }
-.calorie-ring-remaining { font-size: 12px; color: var(--color-text-secondary); }
+.calorie-ring-value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text-primary); font-family: var(--font-mono); }
+.calorie-ring-of { font-size: 10px; color: var(--color-text-tertiary); }
+.calorie-ring-remaining { font-size: 11px; color: var(--color-text-secondary); }
 
 /* Macro Bar */
 .macro-bar { display: flex; align-items: center; gap: 12px; }
@@ -647,9 +651,9 @@ input::placeholder { color: var(--color-muted-foreground); }
 .calorie-hero { display: flex; align-items: center; gap: 16px; }
 .calorie-hero-ring { flex-shrink: 0; }
 .calorie-hero-info { flex: 1; min-width: 0; }
-.calorie-hero-value { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--font-mono); color: var(--color-foreground); line-height: 1.1; }
-.calorie-hero-target { font-size: 14px; color: var(--color-muted-foreground); }
-.calorie-hero-sparkline { margin-top: 8px; }
+.calorie-hero-value { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--font-mono); color: var(--color-foreground); line-height: 1.1; letter-spacing: -0.02em; }
+.calorie-hero-target { font-size: 14px; color: var(--color-muted-foreground); font-weight: 400; }
+.calorie-hero-sparkline { margin-top: 6px; }
 
 /* Compact Stats */
 .stat-compact-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -686,10 +690,15 @@ input::placeholder { color: var(--color-muted-foreground); }
 .trend-labels span { font-size: 10px; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Calendar Grid */
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px 4px; }
-.cal-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dot { width: 12px; height: 12px; border-radius: 3px; }
 .cal-dot-empty { visibility: hidden; }
-.cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 600; letter-spacing: 0.02em; }
+.cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.4; }
+.cal-dot-low { background: var(--color-muted); }
+.cal-dot-medium { background: var(--color-carbs); }
+.cal-dot-high { background: var(--color-primary); }
+.cal-dot-over { background: var(--color-fat); }
+.cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 500; }
 
 /* Day Strip */
 .day-strip { display: flex; gap: 3px; flex-wrap: wrap; }
@@ -702,7 +711,6 @@ input::placeholder { color: var(--color-muted-foreground); }
 
 /* Small/Utility */
 .p-sm { padding: 8px; }
-.text-xxs { font-size: 10px; line-height: 1.2; }
 .ml-auto { margin-left: auto; }
 
 /* Mobile responsive */
@@ -721,6 +729,8 @@ input::placeholder { color: var(--color-muted-foreground); }
 .card-sm .card-content { padding: 12px 16px 16px; }
 .card-sm .card-header { padding: 12px 16px 10px; }
 .card-sm .card-title { font-size: 16px; }
+
+
 /* Macro Tile (spacious redesign) */
 .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
@@ -858,6 +868,8 @@ input::placeholder { color: var(--color-muted-foreground); }
     --color-surface-tertiary: #2a2a2a;
     --color-destructive: #ef4444;
     --color-ring: #e8927a;
+    --color-success: #22c55e;
+    --color-warning: #eab308;
     --color-protein: #60a5fa;
     --color-carbs: #fbbf24;
     --color-fat: #fb7185;

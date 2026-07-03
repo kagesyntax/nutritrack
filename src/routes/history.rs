@@ -12,6 +12,15 @@ fn day_total_cal(day: &DayLog) -> f64 {
         .sum()
 }
 
+fn day_of_week(date_str: &str) -> usize {
+    let y: i32 = date_str[0..4].parse().unwrap();
+    let m: i32 = date_str[5..7].parse().unwrap();
+    let d: i32 = date_str[8..10].parse().unwrap();
+    let t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
+    let y = if m < 3 { y - 1 } else { y };
+    ((y + y / 4 - y / 100 + y / 400 + t[(m - 1) as usize] + d) % 7) as usize
+}
+
 fn date_minus_days(date: &str, days: i32) -> String {
     let mut year: i32 = date[0..4].parse().unwrap();
     let mut month: i32 = date[5..7].parse().unwrap();
@@ -108,15 +117,26 @@ pub fn History() -> Element {
             let (cals, color) = match log {
                 Some(l) => {
                     let c = day_total_cal(l);
-                    if c >= target_cal * 0.9 && c <= target_cal * 1.1 {
-                        (c, "bg-primary")
-                    } else if c > target_cal * 0.75 {
-                        (c, "bg-carbs")
+                    if target_cal > 0.0 {
+                        let pct = c / target_cal;
+                        if pct > 1.1 {
+                            (c, "cal-dot-over")
+                        } else if pct >= 0.9 {
+                            (c, "cal-dot-high")
+                        } else if pct > 0.5 {
+                            (c, "cal-dot-medium")
+                        } else if c > 0.0 {
+                            (c, "cal-dot-low")
+                        } else {
+                            (c, "cal-dot-none")
+                        }
+                    } else if c > 0.0 {
+                        (c, "cal-dot-medium")
                     } else {
-                        (c, "bg-muted")
+                        (c, "cal-dot-none")
                     }
                 }
-                None => (0.0, "bg-surface-tertiary"),
+                None => (0.0, "cal-dot-none"),
             };
             HeatmapDay {
                 date: d,
@@ -140,13 +160,21 @@ pub fn History() -> Element {
             div { class: "flex flex-col gap-2 mb-4",
                 span { class: "text-sm font-medium text-foreground font-heading", "Last 30 Days" }
                 div { class: "cal-grid",
-                    div { class: "cal-label", "M" }
-                    div { class: "cal-label", "T" }
-                    div { class: "cal-label", "W" }
-                    div { class: "cal-label", "T" }
-                    div { class: "cal-label", "F" }
-                    div { class: "cal-label", "S" }
-                    div { class: "cal-label", "S" }
+                    div { class: "cal-label", "Su" }
+                    div { class: "cal-label", "Mo" }
+                    div { class: "cal-label", "Tu" }
+                    div { class: "cal-label", "We" }
+                    div { class: "cal-label", "Th" }
+                    div { class: "cal-label", "Fr" }
+                    div { class: "cal-label", "Sa" }
+                    {
+                        let first_dow = day_of_week(&last_30_days[0].date);
+                        rsx! {
+                            for _ in 0..first_dow {
+                                div { class: "cal-dot cal-dot-empty" }
+                            }
+                        }
+                    }
                     for day in &last_30_days {
                         div {
                             class: "cal-dot {day.color}",
