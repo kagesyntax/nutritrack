@@ -182,6 +182,28 @@ pub fn History() -> Element {
                         }
                     }
                 }
+                div { class: "cal-legend",
+                    div { class: "cal-legend-item",
+                        div { class: "cal-legend-dot", style: "background: var(--color-surface-tertiary); opacity: 0.4;" }
+                        span { "No data" }
+                    }
+                    div { class: "cal-legend-item",
+                        div { class: "cal-legend-dot", style: "background: var(--color-muted);" }
+                        span { "< 50%" }
+                    }
+                    div { class: "cal-legend-item",
+                        div { class: "cal-legend-dot", style: "background: var(--color-carbs);" }
+                        span { "50–90%" }
+                    }
+                    div { class: "cal-legend-item",
+                        div { class: "cal-legend-dot", style: "background: var(--color-primary);" }
+                        span { "90–110%" }
+                    }
+                    div { class: "cal-legend-item",
+                        div { class: "cal-legend-dot", style: "background: var(--color-fat);" }
+                        span { "> 110%" }
+                    }
+                }
             }
 
             if sorted.is_empty() {

@@ -696,15 +696,19 @@ input::placeholder { color: var(--color-muted-foreground); }
 .trend-labels span { font-size: 10px; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Calendar Grid */
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-.cal-dot { width: 12px; height: 12px; border-radius: 3px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 24px); gap: 4px; justify-content: center; }
+.cal-dot { width: 24px; height: 24px; border-radius: 4px; justify-self: center; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.cal-dot:hover { transform: scale(1.2); box-shadow: 0 0 0 2px var(--color-background), 0 0 0 3px var(--color-muted-foreground); z-index: 1; position: relative; }
 .cal-dot-empty { visibility: hidden; }
 .cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.4; }
 .cal-dot-low { background: var(--color-muted); }
 .cal-dot-medium { background: var(--color-carbs); }
 .cal-dot-high { background: var(--color-primary); }
 .cal-dot-over { background: var(--color-fat); }
-.cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 500; }
+.cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 500; justify-self: center; line-height: 24px; }
+.cal-legend { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--color-muted-foreground); justify-content: center; margin-top: 4px; }
+.cal-legend-item { display: flex; align-items: center; gap: 3px; }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
 
 /* Day Strip */
 .day-strip { display: flex; gap: 3px; flex-wrap: wrap; }
@@ -729,10 +733,13 @@ input::placeholder { color: var(--color-muted-foreground); }
   .timeline-icon { width: 28px; height: 28px; }
   .day-strip-item { width: 10px; height: 10px; }
   .calorie-hero-value { font-size: 28px; }
+  .cal-grid { grid-template-columns: repeat(7, 20px); gap: 3px; }
+  .cal-dot { width: 20px; height: 20px; }
+  .cal-label { line-height: 20px; }
 }
 
 /* Card size variants */
-.card-sm .card-content { padding: 12px 16px 16px; }
+.card-sm .card-content { padding: 14px 18px 16px; }
 .card-sm .card-header { padding: 12px 16px 10px; }
 .card-sm .card-title { font-size: 16px; }
 
@@ -742,17 +749,22 @@ input::placeholder { color: var(--color-muted-foreground); }
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
 .macro-tile-header { display: flex; align-items: center; gap: 8px; }
 .macro-tile-dot { width: 10px; height: 10px; border-radius: 9999px; flex-shrink: 0; }
-.macro-tile-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted-foreground); line-height: 1; }
+.macro-tile-label { font-size: 11px; font-weight: 600; color: var(--color-muted-foreground); line-height: 1; white-space: nowrap; }
 .macro-tile-values { display: flex; align-items: baseline; gap: 8px; }
-.macro-tile-current { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; font-family: var(--font-mono); }
+.macro-tile-current { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; font-family: var(--font-mono); }
 .macro-tile-target { font-size: 14px; color: var(--color-muted-foreground); }
 .macro-tile-bar-row { display: flex; align-items: center; gap: 12px; }
 .macro-tile-pct { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-text-secondary); min-width: 44px; text-align: right; font-family: var(--font-mono); }
 .macro-tile-content .macro-bar-track { height: 10px; }
 
 @media (max-width: 479px) {
-  .macro-tile-current { font-size: 24px; }
+  .macro-tile-current { font-size: 20px; }
   .macro-tile-content { gap: 8px; }
+  .macro-tile-values { gap: 6px; }
+  .macro-grid { gap: 10px; }
+  .macro-tile-pct { font-size: 12px; min-width: 36px; }
+  .macro-tile-target { font-size: 12px; }
+  .macro-tile-label { font-size: 10px; }
 }
 /* ===== RESPONSIVE IMPROVEMENTS ===== */
 
