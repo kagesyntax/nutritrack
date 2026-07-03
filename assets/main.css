@@ -164,13 +164,11 @@ input {
 .group { position: relative; }
 
 /* Spacing */
-.gap-0_5 { gap: 2px; }
 .gap-1 { gap: 4px; }
 .gap-1_5 { gap: 6px; }
 .gap-2 { gap: 8px; }
 .gap-3 { gap: 12px; }
 .gap-4 { gap: 16px; }
-.gap-5 { gap: 20px; }
 .gap-6 { gap: 24px; }
 
 .p-0 { padding: 0; }
@@ -190,7 +188,6 @@ input {
 .py-1 { padding-top: 4px; padding-bottom: 4px; }
 .py-1_5 { padding-top: 6px; padding-bottom: 6px; }
 .py-2 { padding-top: 8px; padding-bottom: 8px; }
-.py-2_5 { padding-top: 10px; padding-bottom: 10px; }
 .py-3 { padding-top: 12px; padding-bottom: 12px; }
 .py-4 { padding-top: 16px; padding-bottom: 16px; }
 .py-6 { padding-top: 24px; padding-bottom: 24px; }
@@ -249,7 +246,7 @@ input {
 .font-bold { font-weight: 700; }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
-.text-10px { font-size: 10px; line-height: 1.25; }
+.text-xxs { font-size: 10px; line-height: 1.25; }
 .text-xs { font-size: 12px; line-height: 1.5; }
 .text-sm { font-size: 14px; line-height: 1.5; }
 .text-md { font-size: 16px; line-height: 1.5; }
@@ -672,13 +669,24 @@ input::placeholder { color: var(--color-muted-foreground); }
 .timeline-add { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 10px; border-radius: 8px; color: var(--color-muted-foreground); cursor: pointer; transition: all 0.15s ease; border: 1px dashed var(--color-border); background: transparent; }
 .timeline-add:hover { color: var(--color-primary); border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
 
-/* Sparkline */
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 28px; }
-.sparkline-bar { width: 100%; border-radius: 2px; min-height: 2px; transition: height 0.3s ease; }
+/* Trend Chart */
+.trend-chart { position: relative; height: 56px; }
+.trend-target-line { position: absolute; inset: 0; border-top: 1px dashed var(--color-muted-foreground); opacity: 0.25; pointer-events: none; z-index: 1; }
+.trend-bars { display: flex; align-items: flex-end; gap: 3px; height: 100%; }
+.trend-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+.trend-bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 3px; transition: height 0.3s ease; }
+.trend-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+.trend-labels span { font-size: 10px; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Calendar Grid */
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-.cal-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.cal-dot { width: 12px; height: 12px; border-radius: 3px; }
+.cal-dot-empty { visibility: hidden; }
+.cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.3; }
+.cal-dot-low { background: var(--color-muted); }
+.cal-dot-medium { background: var(--color-carbs); }
+.cal-dot-high { background: var(--color-primary); }
+.cal-dot-over { background: var(--color-fat); }
 .cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 500; }
 
 /* Day Strip */
