@@ -3,38 +3,33 @@ use dioxus::prelude::*;
 #[component]
 pub fn CalorieRing(current: f64, target: f64) -> Element {
     let ratio = if target > 0.0 { (current / target).min(1.0) } else { 0.0 };
-    let remaining = (target - current).max(0.0);
 
     rsx! {
-        div { class: "flex flex-col items-center gap-2",
-            div { class: "calorie-ring",
-                svg {
-                    class: "calorie-ring-svg",
-                    view_box: "0 0 120 120",
-                    circle {
-                        cx: "60", cy: "60", r: "52",
-                        fill: "none",
-                        stroke: "currentColor",
-                        class: "text-surface-tertiary",
-                        stroke_width: "8",
-                    }
-                    circle {
-                        cx: "60", cy: "60", r: "52",
-                        fill: "none",
-                        stroke: "currentColor",
-                        class: "text-primary",
-                        stroke_width: "8",
-                        stroke_linecap: "round",
-                        stroke_dasharray: "326.73",
-                        stroke_dashoffset: "{326.73 - (326.73 * ratio)}",
-                    }
+        div { class: "calorie-ring",
+            svg {
+                class: "calorie-ring-svg",
+                view_box: "0 0 120 120",
+                circle {
+                    cx: "60", cy: "60", r: "52",
+                    fill: "none",
+                    stroke: "currentColor",
+                    class: "text-surface-tertiary",
+                    stroke_width: "8",
                 }
-                div { class: "calorie-ring-label",
-                    span { class: "calorie-ring-value", "{current:.0}" }
-                    span { class: "calorie-ring-of", "of {target:.0} kcal" }
+                circle {
+                    cx: "60", cy: "60", r: "52",
+                    fill: "none",
+                    stroke: "currentColor",
+                    class: "text-primary",
+                    stroke_width: "8",
+                    stroke_linecap: "round",
+                    stroke_dasharray: "326.73",
+                    stroke_dashoffset: "{326.73 - (326.73 * ratio)}",
                 }
             }
-            span { class: "calorie-ring-remaining", "{remaining:.0} kcal remaining" }
+            div { class: "calorie-ring-label",
+                span { class: "calorie-ring-value", "{current:.0}" }
+            }
         }
     }
 }

@@ -194,6 +194,7 @@ pub fn Dashboard() -> Element {
                                                 }
                                             }
                                         }
+                                        div { class: "text-xs text-muted-foreground mt-1", "7-day trend" }
                                     }
                                 }
                             }
@@ -253,7 +254,7 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
                 }
                 div { class: "macro-tile-values",
                     span { class: "macro-tile-current {text_color}", "{current:.0}" }
-                    span { class: "macro-tile-target", "/ {target:.0} {unit}" }
+                    span { class: "macro-tile-target", "of {target:.0} {unit}" }
                 }
                 div { class: "macro-tile-bar-row",
                     div { class: "macro-bar-track",

@@ -532,7 +532,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 }
 
 /* Calorie Ring */
-.calorie-ring { position: relative; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
+.calorie-ring { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
 .calorie-ring-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
 .calorie-ring-bg { fill: none; stroke: var(--color-surface-tertiary); stroke-width: 8; }
 .calorie-ring-fg { fill: none; stroke: var(--color-primary); stroke-width: 8; stroke-linecap: round; }
@@ -638,7 +638,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 /* ===== BENTO & COMPACT ===== */
 
 /* Bento Grid */
-.bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 @media (min-width: 768px) {
   .bento-grid { grid-template-columns: repeat(4, 1fr); }
 }
@@ -648,12 +648,12 @@ input::placeholder { color: var(--color-muted-foreground); }
 }
 
 /* Calorie Hero */
-.calorie-hero { display: flex; align-items: center; gap: 16px; }
+.calorie-hero { display: flex; align-items: center; gap: 20px; }
 .calorie-hero-ring { flex-shrink: 0; }
 .calorie-hero-info { flex: 1; min-width: 0; }
-.calorie-hero-value { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--font-mono); color: var(--color-foreground); line-height: 1.1; letter-spacing: -0.02em; }
-.calorie-hero-target { font-size: 14px; color: var(--color-muted-foreground); font-weight: 400; }
-.calorie-hero-sparkline { margin-top: 6px; }
+.calorie-hero-value { font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--font-mono); color: var(--color-foreground); line-height: 1.1; letter-spacing: -0.02em; }
+.calorie-hero-target { font-size: 15px; color: var(--color-muted-foreground); font-weight: 400; margin-top: 2px; }
+.calorie-hero-sparkline { margin-top: 10px; }
 
 /* Compact Stats */
 .stat-compact-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -681,8 +681,8 @@ input::placeholder { color: var(--color-muted-foreground); }
 .timeline-add:hover { color: var(--color-primary); border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
 
 /* Sparkline (used in dashboard hero) */
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 28px; }
-.sparkline-bar { width: 100%; border-radius: 2px; min-height: 2px; transition: height 0.3s ease; }
+.sparkline { display: flex; align-items: flex-end; gap: 4px; height: 36px; }
+.sparkline-bar { width: 100%; border-radius: 3px; min-height: 3px; transition: height 0.3s ease; }
 
 /* Trend Chart */
 
@@ -725,17 +725,20 @@ input::placeholder { color: var(--color-muted-foreground); }
 
 /* Mobile responsive */
 @media (max-width: 479px) {
-  .bento-grid { gap: 8px; }
+  .bento-grid { gap: 10px; }
   .stat-compact-row { gap: 4px; }
   .stat-compact { padding: 6px 10px; }
-  .calorie-hero { gap: 10px; }
+  .calorie-hero { gap: 16px; flex-wrap: wrap; justify-content: center; }
   .timeline-item { padding: 6px 8px; }
   .timeline-icon { width: 28px; height: 28px; }
   .day-strip-item { width: 10px; height: 10px; }
-  .calorie-hero-value { font-size: 28px; }
+  .calorie-hero-value { font-size: 32px; }
+  .calorie-hero-target { font-size: 13px; }
   .cal-grid { grid-template-columns: repeat(7, 20px); gap: 3px; }
   .cal-dot { width: 20px; height: 20px; }
   .cal-label { line-height: 20px; }
+  .sparkline { height: 32px; gap: 3px; }
+  .bento-hero .card-sm .card-content { padding: 16px; }
 }
 
 /* Card size variants */
@@ -743,28 +746,34 @@ input::placeholder { color: var(--color-muted-foreground); }
 .card-sm .card-header { padding: 12px 16px 10px; }
 .card-sm .card-title { font-size: 16px; }
 
+/* Bento hero card extra padding */
+.bento-hero .card-sm .card-content { padding: 20px 24px; }
+
 
 /* Macro Tile (spacious redesign) */
 .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 480px) {
+  .macro-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
 .macro-tile-header { display: flex; align-items: center; gap: 8px; }
 .macro-tile-dot { width: 10px; height: 10px; border-radius: 9999px; flex-shrink: 0; }
 .macro-tile-label { font-size: 11px; font-weight: 600; color: var(--color-muted-foreground); line-height: 1; white-space: nowrap; }
-.macro-tile-values { display: flex; align-items: baseline; gap: 8px; }
-.macro-tile-current { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; font-family: var(--font-mono); }
-.macro-tile-target { font-size: 14px; color: var(--color-muted-foreground); }
+.macro-tile-values { display: flex; flex-direction: column; gap: 2px; }
+.macro-tile-current { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; font-family: var(--font-mono); }
+.macro-tile-target { font-size: 12px; color: var(--color-muted-foreground); line-height: 1.2; }
 .macro-tile-bar-row { display: flex; align-items: center; gap: 12px; }
 .macro-tile-pct { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-text-secondary); min-width: 44px; text-align: right; font-family: var(--font-mono); }
-.macro-tile-content .macro-bar-track { height: 10px; }
+.macro-tile-content .macro-bar-track { height: 12px; }
 
 @media (max-width: 479px) {
-  .macro-tile-current { font-size: 20px; }
-  .macro-tile-content { gap: 8px; }
-  .macro-tile-values { gap: 6px; }
+  .macro-tile-current { font-size: 22px; }
+  .macro-tile-content { gap: 10px; padding: 4px 0; }
   .macro-grid { gap: 10px; }
   .macro-tile-pct { font-size: 12px; min-width: 36px; }
   .macro-tile-target { font-size: 12px; }
   .macro-tile-label { font-size: 10px; }
+  .macro-tile-content .macro-bar-track { height: 12px; }
 }
 /* ===== RESPONSIVE IMPROVEMENTS ===== */
 
