@@ -677,7 +677,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 .sparkline-bar { width: 100%; border-radius: 2px; min-height: 2px; transition: height 0.3s ease; }
 
 /* Calendar Grid */
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px 8px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 .cal-dot { width: 12px; height: 12px; border-radius: 3px; }
 .cal-dot-empty { visibility: hidden; }
 .cal-label { font-size: 10px; color: var(--color-muted-foreground); text-align: center; font-weight: 600; letter-spacing: 0.04em; }
