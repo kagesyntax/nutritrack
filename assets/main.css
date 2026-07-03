@@ -344,6 +344,51 @@ input {
   transition: transform 100ms ease-in;
 }
 
+/* Serving control panel */
+.serving-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-muted);
+  border-radius: 8px;
+  padding: 2px;
+}
+.serving-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+  touch-action: manipulation;
+}
+.serving-btn:hover {
+  background: var(--color-card);
+  color: var(--color-foreground);
+}
+.serving-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-serving-pop {
+    animation: none;
+  }
+  .serving-btn:active {
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Dashboard entrance animation */
 @keyframes dashboard-entrance {
   from { opacity: 0; transform: translateY(8px); }
