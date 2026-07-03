@@ -12,7 +12,7 @@ pub fn Settings() -> Element {
     rsx! {
         div { class: "max-w-2xl mx-auto p-6 space-y-6",
             h1 { class: "text-2xl font-bold text-foreground font-heading flex items-center gap-2",
-                IconSettings { size: 28 }
+                IconSettings { size: 24 }
                 "Settings"
             }
 
@@ -138,7 +138,7 @@ fn ThemeOption(
     };
     rsx! {
         button {
-            class: "flex-1 px-4 py-2_5 rounded-lg border text-sm font-medium transition-all duration-200 {active_class}",
+            class: "flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-all duration-200 {active_class}",
             onclick: move |e| {
                 onclick.call(e);
             },

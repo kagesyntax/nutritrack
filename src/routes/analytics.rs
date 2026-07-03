@@ -164,11 +164,11 @@ pub fn Analytics() -> Element {
         let cals = day_total_cals(day);
         let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
         let spark_color = if pct >= 90.0 && pct <= 110.0 {
-            "#22c55e"
+            "var(--color-success)"
         } else if pct >= 75.0 && pct <= 125.0 {
-            "#eab308"
+            "var(--color-warning)"
         } else {
-            "#ef4444"
+            "var(--color-destructive)"
         };
         let label = day.date.get(5..).unwrap_or(&day.date).to_string();
         (day.date.clone(), label, pct, spark_color)
@@ -183,11 +183,11 @@ pub fn Analytics() -> Element {
         } else {
             let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
             if pct >= 90.0 && pct <= 110.0 {
-                "#22c55e".to_string()
+                "var(--color-success)".to_string()
             } else if pct >= 75.0 {
-                "#eab308".to_string()
+                "var(--color-warning)".to_string()
             } else {
-                "#ef4444".to_string()
+                "var(--color-destructive)".to_string()
             }
         };
         (day.date.clone(), cals, color)

@@ -407,7 +407,6 @@ input::placeholder { color: var(--color-muted-foreground); }
 /* Space-y utilities */
 .space-y-3 > * + * { margin-top: 12px; }
 .space-y-4 > * + * { margin-top: 16px; }
-.space-y-5 > * + * { margin-top: 20px; }
 .space-y-6 > * + * { margin-top: 24px; }
 
 /* ===== COMPONENTS ===== */

@@ -111,7 +111,7 @@ pub fn MealDetail(id: String) -> Element {
                         div { class: "macro-bar-track mt-2",
                             div { class: "macro-bar-fill bg-protein", style: "width: {protein_pct:.0}%" }
                         }
-                        p { class: "text-10px text-muted-foreground mt-1", "{protein_pct:.0}% of {targets.protein_g:.0}g" }
+                        p { class: "text-xxs text-muted-foreground mt-1", "{protein_pct:.0}% of {targets.protein_g:.0}g" }
                     }
                     div { class: "macro-stat bg-carbs-10",
                         p { class: "macro-stat-label text-carbs", "Carbs" }
@@ -119,7 +119,7 @@ pub fn MealDetail(id: String) -> Element {
                         div { class: "macro-bar-track mt-2",
                             div { class: "macro-bar-fill bg-carbs", style: "width: {carbs_pct:.0}%" }
                         }
-                        p { class: "text-10px text-muted-foreground mt-1", "{carbs_pct:.0}% of {targets.carbs_g:.0}g" }
+                        p { class: "text-xxs text-muted-foreground mt-1", "{carbs_pct:.0}% of {targets.carbs_g:.0}g" }
                     }
                     div { class: "macro-stat bg-fat-10",
                         p { class: "macro-stat-label text-fat", "Fat" }
@@ -127,7 +127,7 @@ pub fn MealDetail(id: String) -> Element {
                         div { class: "macro-bar-track mt-2",
                             div { class: "macro-bar-fill bg-fat", style: "width: {fat_pct:.0}%" }
                         }
-                        p { class: "text-10px text-muted-foreground mt-1", "{fat_pct:.0}% of {targets.fat_g:.0}g" }
+                        p { class: "text-xxs text-muted-foreground mt-1", "{fat_pct:.0}% of {targets.fat_g:.0}g" }
                     }
                 }
             }
@@ -223,7 +223,7 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
     let fat = food.as_ref().map(|f| f.fat_g).unwrap_or(0.0);
 
     rsx! {
-        div { class: "flex items-center justify-between py-2_5 gap-2 group",
+        div { class: "flex items-center justify-between py-2 gap-2 group",
             div { class: "flex-1 min-w-0",
                 p { class: "text-sm font-medium text-foreground truncate",
                     if let Some(f) = &food {
@@ -232,13 +232,13 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
                         "Unknown food"
                     }
                 }
-                p { class: "text-10px text-muted-foreground mt-1",
+                p { class: "text-xxs text-muted-foreground mt-1",
                     "{servings_str} serving(s) x {serving_size} — {cals_per}"
                 }
                 div { class: "flex items-center gap-2 mt-1",
-                    span { class: "text-10px tabular-nums text-protein font-medium", "P {protein:.0}g" }
-                    span { class: "text-10px tabular-nums text-carbs font-medium", "C {carbs:.0}g" }
-                    span { class: "text-10px tabular-nums text-fat font-medium", "F {fat:.0}g" }
+                    span { class: "text-xxs tabular-nums text-protein font-medium", "P {protein:.0}g" }
+                    span { class: "text-xxs tabular-nums text-carbs font-medium", "C {carbs:.0}g" }
+                    span { class: "text-xxs tabular-nums text-fat font-medium", "F {fat:.0}g" }
                 }
             }
             div { class: "flex items-center gap-1_5 shrink-0",
@@ -256,7 +256,7 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
                                 }
                             }
                         },
-                        IconMinus { size: 12 }
+                        IconMinus { size: 14 }
                     }
                     span { class: "serving-value", "{servings_str}" }
                     button {
@@ -271,7 +271,7 @@ fn EntryRow(entry: FoodEntry, meal_id: String, day_date: String, entry_index: us
                                 }
                             }
                         },
-                        IconPlus { size: 12 }
+                        IconPlus { size: 14 }
                     }
                 }
                 span { class: "text-xs tabular-nums text-muted-foreground w-12 text-right", "{cals_total}" }

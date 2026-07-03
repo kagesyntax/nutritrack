@@ -134,11 +134,11 @@ pub fn Dashboard() -> Element {
                 0.0
             };
             let color = if pct >= 90.0 && pct <= 110.0 {
-                "#22c55e"
+                "var(--color-success)"
             } else if pct >= 75.0 {
-                "#eab308"
+                "var(--color-warning)"
             } else {
-                "#ef4444"
+                "var(--color-destructive)"
             };
             days.push((date_str, cals, pct, color.to_string()));
             cursor.set_date(cursor.get_date() - 1);
@@ -185,15 +185,6 @@ pub fn Dashboard() -> Element {
                                         span { class: "calorie-hero-value", "{total_cal:.0}" }
                                         span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
-                                    div { class: "flex items-center gap-2 mt-2",
-                                        div { class: "macro-bar-track", style: "flex: 1",
-                                            div {
-                                                class: "macro-bar-fill bg-primary",
-                                                style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
-                                            }
-                                        }
-                                        span { class: "text-xs font-medium tabular-nums", "{(total_cal / target_cal * 100.0):.0}%" }
-                                    }
                                     div { class: "calorie-hero-sparkline",
                                         div { class: "sparkline",
                                             for (_, _, pct, spark_color) in &week_spark {
@@ -204,7 +195,6 @@ pub fn Dashboard() -> Element {
                                             }
                                         }
                                     }
-                                    span { class: "text-xs text-muted-foreground", "Remaining: {remaining:.0} kcal" }
                                 }
                             }
                         }
