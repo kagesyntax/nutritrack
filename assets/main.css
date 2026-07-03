@@ -105,6 +105,10 @@ input {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Animations
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -125,6 +129,27 @@ input {
 .animate-spin { animation: spin 1s linear infinite; }
 .animate-fade-in { animation: fadeIn 0.3s ease-out; }
 .animate-slide-in { animation: slide-in-from-bottom 0.2s ease-out; }
+
+/* App-shell outlet transition */
+.page-transition { view-transition-name: app-page; }
+.page-transition-enter { animation: page-enter 0.32s ease-out both; }
+.page-transition-exit  { animation: page-exit  0.18s ease-in both; }
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px) scale(0.995); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+@keyframes page-exit {
+  from { opacity: 1; transform: translateY(0)   scale(1); }
+  to   { opacity: 0; transform: translateY(-6px) scale(0.995); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-enter,
+  .page-transition-exit {
+    animation: none;
+  }
+}
+
 .anim-sparkline-bar {
   animation: sparkline-grow 400ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   transform-origin: bottom;
@@ -139,6 +164,7 @@ input {
   opacity: 0;
   animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: var(--entrance-delay, 0ms);
+  will-change: transform, opacity;
 }
 @media (prefers-reduced-motion: reduce) {
   .anim-dashboard-entrance {
@@ -148,7 +174,7 @@ input {
   }
 }
 
-/* Streak badge pulse — GPU-composited transform only, runs 3 times then stops */
+/* Streak badge pulse */
 @keyframes streak-pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -180,9 +206,7 @@ input {
   }
 }
 
-/* ===== SWARM SHARED ANIMATION PLATFORM ===== */
-
-/* Reduced-motion safety: disable all user-facing motion by default */
+/* Swarm shared animation platform */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -213,7 +237,7 @@ input {
   }
 }
 
-/* Generic entrance utilities */
+/* Fade-up entrance */
 .anim-fade-up {
   opacity: 0;
   transform: translateY(6px);
@@ -222,23 +246,16 @@ input {
   will-change: transform, opacity;
 }
 
+/* Scale-in entrance */
+@keyframes scaleIn {
+  to { opacity: 1; transform: scale(1); }
+}
 .anim-scale-in {
   opacity: 0;
   transform: scale(0.94);
   animation: scaleIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   animation-delay: var(--delay-ms, 0ms);
   will-change: transform, opacity;
-}
-
-@keyframes scaleIn {
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Progress bar fill animation */
-.anim-progress-bar-fill {
-  transform-origin: left;
-  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--bar-delay, 0ms);
 }
 
 /* Badge pulse */
@@ -251,7 +268,7 @@ input {
   animation: badge-pulse 2200ms ease-out 1;
 }
 
-/* Theme selector active card */
+/* Theme active */
 @keyframes theme-active {
   to { transform: scale(1); }
 }
@@ -264,13 +281,12 @@ input {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .anim-timeline-row {
   animation: timeline-row 200ms ease-out both;
   animation-delay: var(--delay-ms, 0ms);
 }
 
-/* Toast notification animations */
+/* Toast notifications */
 @keyframes toast-in {
   from { opacity: 0; transform: translateX(-50%) translateY(16px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -290,7 +306,6 @@ input {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .anim-log-entrance {
   opacity: 0;
   animation: log-entrance 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -342,223 +357,6 @@ input {
 .serving-btn:active {
   transform: scale(0.92);
   transition: transform 100ms ease-in;
-}
-
-/* Dashboard entrance animation */
-@keyframes dashboard-entrance {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.anim-dashboard-entrance {
-  opacity: 0;
-  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--entrance-delay, 0ms);
-}
-@media (prefers-reduced-motion: reduce) {
-  .anim-dashboard-entrance {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Macro tile entrance stagger */
-.macro-grid > *:nth-child(1) { --entrance-delay: 300ms; }
-.macro-grid > *:nth-child(2) { --entrance-delay: 350ms; }
-.macro-grid > *:nth-child(3) { --entrance-delay: 400ms; }
-.macro-grid > *:nth-child(4) { --entrance-delay: 450ms; }
-
-/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
-@keyframes progress-bar-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-.anim-progress-bar-fill {
-  transform-origin: left;
-  transform: scaleX(0);
-  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--bar-delay, 0ms);
-}
-@media (prefers-reduced-motion: reduce) {
-  .anim-progress-bar-fill {
-    animation: none;
-    transform: scaleX(1);
-  }
-}
-
-/* ===== SWARM SHARED ANIMATION PLATFORM ===== */
-
-/* Reduced-motion safety: disable all user-facing motion by default */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  .animate-spin,
-  .animate-fade-in,
-  .animate-slide-in,
-  .anim-dashboard-entrance,
-  .anim-fade-up,
-  .anim-scale-in,
-  .anim-progress-bar-fill,
-  .anim-badge-pulse,
-  .anim-theme-active,
-  .anim-timeline-row,
-  .anim-sparkline {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  .skeleton {
-    animation: none !important;
-    opacity: 1 !important;
-  }
-}
-
-/* Generic entrance utilities */
-.anim-fade-up {
-  opacity: 0;
-  transform: translateY(6px);
-  animation: fadeIn 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--delay-ms, 0ms);
-  will-change: transform, opacity;
-}
-
-.anim-scale-in {
-  opacity: 0;
-  transform: scale(0.94);
-  animation: scaleIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  animation-delay: var(--delay-ms, 0ms);
-  will-change: transform, opacity;
-}
-
-@keyframes scaleIn {
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Progress bar fill animation */
-.anim-progress-bar-fill {
-  transform-origin: left;
-  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--bar-delay, 0ms);
-}
-
-/* Badge pulse */
-@keyframes badge-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.45); }
-  70% { box-shadow: 0 0 0 10px rgba(217, 119, 87, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0); }
-}
-.anim-badge-pulse {
-  animation: badge-pulse 2200ms ease-out 1;
-}
-
-/* Theme selector active card */
-@keyframes theme-active {
-  to { transform: scale(1); }
-}
-.theme-card-active {
-  animation: theme-active 180ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-/* Timeline rows */
-@keyframes timeline-row {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.anim-timeline-row {
-  animation: timeline-row 200ms ease-out both;
-  animation-delay: var(--delay-ms, 0ms);
-}
-
-/* Toast notification animations */
-@keyframes toast-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-.anim-toast {
-  opacity: 1;
-  animation: toast-in 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-.anim-toast-hide {
-  opacity: 0;
-  transform: translateX(-50%) translateY(12px);
-}
-
-/* Log screen entrance */
-@keyframes log-entrance {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.anim-log-entrance {
-  opacity: 0;
-  animation: log-entrance 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-@media (prefers-reduced-motion: reduce) {
-  .anim-log-entrance {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Log meal-section entrance stagger */
-.log-meal-stagger > *:nth-child(1) { --entrance-delay: 0ms; }
-.log-meal-stagger > *:nth-child(2) { --entrance-delay: 60ms; }
-.log-meal-stagger > *:nth-child(3) { --entrance-delay: 120ms; }
-.log-meal-stagger > *:nth-child(4) { --entrance-delay: 180ms; }
-.log-meal-stagger {
-  --log-ease: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Log macro bar fill */
-@keyframes log-bar-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-.anim-log-bar-fill {
-  transform-origin: left;
-  transform: scaleX(0);
-  animation: log-bar-fill 520ms var(--log-ease, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
-  animation-delay: var(--bar-delay, 0ms);
-}
-@media (prefers-reduced-motion: reduce) {
-  .anim-log-bar-fill {
-    animation: none;
-    transform: scaleX(1);
-  }
-}
-
-/* Serving control feedback */
-.serving-btn:active {
-  transform: scale(0.92);
-  transition: transform 100ms ease-in;
-}
-
-/* Dashboard entrance animation */
-@keyframes dashboard-entrance {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.anim-dashboard-entrance {
-  opacity: 0;
-  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--entrance-delay, 0ms);
-  will-change: transform, opacity;
-}
-@media (prefers-reduced-motion: reduce) {
-  .anim-dashboard-entrance {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* Settings entrance animation */
@@ -621,12 +419,13 @@ input {
 .sparkline-bar:nth-child(6) { --bar-delay: 265ms; }
 .sparkline-bar:nth-child(7) { --bar-delay: 290ms; }
 
-/* Card feedback extend */
+/* Card feedback */
 .card {
   transition: box-shadow 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .card-pressable {
   touch-action: manipulation;
+  cursor: pointer;
 }
 .card-pressable:active {
   transition: transform 100ms ease-in, box-shadow 100ms ease-in;
@@ -635,51 +434,96 @@ input {
   transform: translateY(-1px);
 }
 
-/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
-@keyframes progress-bar-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+/* Serving control press micro-feedback */
+.serving-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-muted);
+  border-radius: 8px;
+  padding: 2px;
 }
-.anim-progress-bar-fill {
-  transform-origin: left;
-  transform: scaleX(0);
-  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--bar-delay, 0ms);
+.serving-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+  touch-action: manipulation;
+}
+.serving-btn:hover {
+  background: var(--color-card);
+  color: var(--color-foreground);
+}
+.serving-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+.serving-press {
+  animation: serving-press-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes serving-press-pop {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .anim-progress-bar-fill {
+  .serving-press {
     animation: none;
-    transform: scaleX(1);
+  }
+  .serving-btn:active {
+    transform: none;
+    transition: none;
   }
 }
 
-/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
-@keyframes progress-bar-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+/* Loading skeleton / shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden; /* contain shimmer to element bounds */
+  background: var(--color-muted);
+  border-radius: 8px;
+  color: transparent !important;
 }
-.anim-progress-bar-fill {
-  transform-origin: left;
-  transform: scaleX(0);
-  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: var(--bar-delay, 0ms);
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes skeleton-shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .anim-progress-bar-fill {
+  .skeleton {
     animation: none;
-    transform: scaleX(1);
+    opacity: 1 !important;
+  }
+  .skeleton::after {
+    animation: none;
   }
 }
 
 /* Layout */
-.app-shell { display: flex; height: 100vh; background: var(--color-bg); color: var(--color-text); }
-.main-content { flex: 1; overflow-y: auto; background: var(--color-bg); padding-bottom: 80px; }
-@media (min-width: 768px) {
-  .main-content { padding-bottom: 0; }
-}
-@media (min-width: 480px) {
-  .sm-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-}
 .sidebar { display: none; }
 @media (min-width: 768px) {
   .sidebar { display: flex; width: 256px; background: var(--color-card); border-right: 1px solid var(--color-border); padding: 24px; flex-direction: column; flex-shrink: 0; height: 100vh; }
