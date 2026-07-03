@@ -210,8 +210,8 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
-            div { class: "timeline",
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4 anim-dashboard-entrance", style: "--entrance-delay: 400ms", "Today's Meals" }
+            div { class: "timeline anim-dashboard-entrance", style: "--entrance-delay: 400ms",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
                         Link {
@@ -247,6 +247,7 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
     rsx! {
         Card {
+            class: "anim-macro-tile",
             CardContent { class: "macro-tile-content",
                 div { class: "macro-tile-header",
                     div { class: "macro-tile-dot {color}" }

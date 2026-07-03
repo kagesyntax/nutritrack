@@ -750,6 +750,34 @@ input::placeholder { color: var(--color-muted-foreground); }
 .bento-hero .card-sm .card-content { padding: 20px 24px; }
 
 
+/* Macro Tile hover/press animations */
+.anim-macro-tile {
+  will-change: transform;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+.anim-macro-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 10px -2px rgba(0,0,0,0.06);
+}
+.anim-macro-tile:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  transition: transform 150ms ease-in, box-shadow 150ms ease-in;
+}
+.anim-macro-tile:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-macro-tile {
+    transition: none;
+  }
+  .anim-macro-tile:hover,
+  .anim-macro-tile:active {
+    transform: none;
+  }
+}
+
 /* Macro Tile (spacious redesign) */
 .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-column: span 2; }
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
