@@ -1173,6 +1173,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 /* Bento hero card extra padding */
 .bento-hero .card-sm .card-content { padding: 20px 24px; }
 
+<<<<<<< Updated upstream
 
 /* Macro Tile hover/press animations */
 .anim-macro-tile {
@@ -1201,6 +1202,8 @@ input::placeholder { color: var(--color-muted-foreground); }
     transform: none;
   }
 }
+=======
+>>>>>>> Stashed changes
 
 /* Macro Tile (spacious redesign) */
 .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-column: span 2; }
