@@ -524,11 +524,23 @@ input {
 }
 
 /* Layout */
+.app-shell {
+  display: flex;
+  min-height: 100dvh;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.main-content {
+  flex: 1;
+  padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  min-height: 100dvh;
+  min-height: 100vh;
+}
 .sidebar { display: none; }
 @media (min-width: 768px) {
-  .sidebar { display: flex; width: 256px; background: var(--color-card); border-right: 1px solid var(--color-border); padding: 24px; flex-direction: column; flex-shrink: 0; height: 100vh; }
+  .sidebar { display: flex; width: 256px; background: var(--color-card); border-right: 1px solid var(--color-border); padding: 24px; flex-direction: column; flex-shrink: 0; height: calc(100vh - env(safe-area-inset-bottom, 0px)); }
 }
-.mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-card); border-top: 1px solid var(--color-border); z-index: 50; display: flex; }
+.mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-card); border-top: 1px solid var(--color-border); z-index: 50; display: flex; padding-bottom: env(safe-area-inset-bottom); }
 @media (min-width: 768px) {
   .mobile-bottom-nav { display: none; }
 }
