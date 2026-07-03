@@ -451,6 +451,21 @@ pub fn IconDroplets(size: Option<u32>) -> Element {
 }
 
 #[component]
+pub fn IconMonitor(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}", height: "{s}", view_box: "0 0 24 24",
+            fill: "none", stroke: "currentColor", stroke_width: "2",
+            stroke_linecap: "round", stroke_linejoin: "round",
+            rect { x: "2", y: "3", width: "20", height: "14", rx: "2", ry: "2" }
+            line { x1: "8", y1: "21", x2: "16", y2: "21" }
+            line { x1: "12", y1: "17", x2: "12", y2: "21" }
+        }
+    }
+}
+
+#[component]
 pub fn IconAward(size: Option<u32>) -> Element {
     let s = size.unwrap_or(24);
     rsx! {

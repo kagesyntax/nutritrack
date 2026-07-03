@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::IconSettings;
+use crate::components::icons::{IconSettings, IconSun, IconMoon, IconMonitor};
 use crate::state::models::ThemeMode;
 
 #[component]
@@ -22,29 +22,7 @@ pub fn Settings() -> Element {
                     p { class: "text-sm text-muted-foreground mt-1", "Choose your preferred color scheme" }
                 }
                 CardContent {
-                    div { class: "flex gap-3",
-                        ThemeOption {
-                            label: "Light",
-                            active: settings.read().theme_mode == ThemeMode::Light,
-                            onclick: move |_| {
-                                settings.write().theme_mode = ThemeMode::Light;
-                            },
-                        }
-                        ThemeOption {
-                            label: "Dark",
-                            active: settings.read().theme_mode == ThemeMode::Dark,
-                            onclick: move |_| {
-                                settings.write().theme_mode = ThemeMode::Dark;
-                            },
-                        }
-                        ThemeOption {
-                            label: "System",
-                            active: settings.read().theme_mode == ThemeMode::System,
-                            onclick: move |_| {
-                                settings.write().theme_mode = ThemeMode::System;
-                            },
-                        }
-                    }
+                    ThemeSelector { active: settings.read().theme_mode, on_select: move |m| { settings.write().theme_mode = m; } }
                 }
             }
 
@@ -126,23 +104,56 @@ pub fn Settings() -> Element {
 }
 
 #[component]
-fn ThemeOption(
-    label: &'static str,
-    active: bool,
-    onclick: EventHandler<MouseEvent>,
+fn ThemeSelector(
+    active: ThemeMode,
+    on_select: EventHandler<ThemeMode>,
 ) -> Element {
-    let active_class = if active {
-        "bg-primary text-white border-primary shadow-md"
+    rsx! {
+        div { class: "theme-selector",
+            ThemeCard {
+                mode: ThemeMode::Light,
+                active: active == ThemeMode::Light,
+                icon: rsx! { IconSun {} },
+                label: "Light",
+                on_select: move |_| on_select.call(ThemeMode::Light),
+            }
+            ThemeCard {
+                mode: ThemeMode::Dark,
+                active: active == ThemeMode::Dark,
+                icon: rsx! { IconMoon {} },
+                label: "Dark",
+                on_select: move |_| on_select.call(ThemeMode::Dark),
+            }
+            ThemeCard {
+                mode: ThemeMode::System,
+                active: active == ThemeMode::System,
+                icon: rsx! { IconMonitor {} },
+                label: "Auto",
+                on_select: move |_| on_select.call(ThemeMode::System),
+            }
+        }
+    }
+}
+
+#[component]
+fn ThemeCard(
+    mode: ThemeMode,
+    active: bool,
+    icon: Element,
+    label: &'static str,
+    on_select: EventHandler<MouseEvent>,
+) -> Element {
+    let classes = if active {
+        "theme-card theme-card-active"
     } else {
-        "bg-card text-foreground border-border hover-bg-muted"
+        "theme-card theme-card-inactive"
     };
     rsx! {
         button {
-            class: "flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-all duration-200 {active_class}",
-            onclick: move |e| {
-                onclick.call(e);
-            },
-            "{label}"
+            class: "{classes}",
+            onclick: move |e| on_select.call(e),
+            div { class: "theme-card-icon", {icon} }
+            span { class: "theme-card-label", "{label}" }
         }
     }
 }
