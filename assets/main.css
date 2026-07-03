@@ -690,7 +690,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 .trend-labels span { font-size: 10px; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Calendar Grid */
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 .cal-dot { width: 12px; height: 12px; border-radius: 3px; }
 .cal-dot-empty { visibility: hidden; }
 .cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.4; }
