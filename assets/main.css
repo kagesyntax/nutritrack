@@ -407,6 +407,24 @@ input {
   }
 }
 
+/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
+@keyframes progress-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-progress-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-progress-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 /* Layout */
 .app-shell { display: flex; height: 100vh; background: var(--color-bg); color: var(--color-text); }
 .main-content { flex: 1; overflow-y: auto; background: var(--color-bg); padding-bottom: 80px; }

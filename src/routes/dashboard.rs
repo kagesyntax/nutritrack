@@ -210,8 +210,8 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
-            div { class: "timeline",
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4 anim-dashboard-entrance", style: "--entrance-delay: 400ms", "Today's Meals" }
+            div { class: "timeline anim-dashboard-entrance", style: "--entrance-delay: 400ms",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
                         Link {
