@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
-use crate::components::icons::{IconSettings, IconSun, IconMoon, IconMonitor};
+use crate::components::icons::{IconMonitor, IconMoon, IconSettings, IconSun};
 use crate::state::models::ThemeMode;
 
 #[component]
@@ -104,10 +104,7 @@ pub fn Settings() -> Element {
 }
 
 #[component]
-fn ThemeSelector(
-    active: ThemeMode,
-    on_select: EventHandler<ThemeMode>,
-) -> Element {
+fn ThemeSelector(active: ThemeMode, on_select: EventHandler<ThemeMode>) -> Element {
     rsx! {
         div { class: "theme-selector",
             ThemeCard {

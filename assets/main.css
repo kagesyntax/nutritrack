@@ -333,6 +333,62 @@ input {
   }
 }
 
+/* Dashboard entrance animation */
+@keyframes dashboard-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-dashboard-entrance {
+  opacity: 0;
+  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Stagger priorities: hero > chips > tiles > timeline */
+.bento-hero { --entrance-delay: 180ms; }
+.bento-hero + .macro-grid { --entrance-delay: 260ms; }
+.timeline > *:nth-child(1) { --entrance-delay: 320ms; }
+.timeline > *:nth-child(2) { --entrance-delay: 360ms; }
+.timeline > *:nth-child(3) { --entrance-delay: 400ms; }
+.timeline > *:nth-child(4) { --entrance-delay: 440ms; }
+
+/* Macro tile entrance stagger */
+.macro-grid > *:nth-child(1) { --entrance-delay: 280ms; }
+.macro-grid > *:nth-child(2) { --entrance-delay: 320ms; }
+.macro-grid > *:nth-child(3) { --entrance-delay: 360ms; }
+.macro-grid > *:nth-child(4) { --entrance-delay: 400ms; }
+
+/* Sparkline stagger */
+.sparkline-bar:nth-child(1) { --bar-delay: 140ms; }
+.sparkline-bar:nth-child(2) { --bar-delay: 165ms; }
+.sparkline-bar:nth-child(3) { --bar-delay: 190ms; }
+.sparkline-bar:nth-child(4) { --bar-delay: 215ms; }
+.sparkline-bar:nth-child(5) { --bar-delay: 240ms; }
+.sparkline-bar:nth-child(6) { --bar-delay: 265ms; }
+.sparkline-bar:nth-child(7) { --bar-delay: 290ms; }
+
+/* Card feedback extend */
+.card {
+  transition: box-shadow 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-pressable {
+  touch-action: manipulation;
+}
+.card-pressable:active {
+  transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+}
+.card-pressable:hover {
+  transform: translateY(-1px);
+}
+
 /* Layout */
 .app-shell { display: flex; height: 100vh; background: var(--color-bg); color: var(--color-text); }
 .main-content { flex: 1; overflow-y: auto; background: var(--color-bg); padding-bottom: 80px; }
@@ -656,7 +712,15 @@ input::placeholder { color: var(--color-muted-foreground); }
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover {
+  box-shadow: 0 10px 25px -3px rgba(0,0,0,0.07), 0 4px 10px -2px rgba(0,0,0,0.04);
+}
+.card:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  transition: transform 100ms ease-in, box-shadow 100ms ease-in;
 }
 .card-header {
   padding: 20px 24px 16px;
