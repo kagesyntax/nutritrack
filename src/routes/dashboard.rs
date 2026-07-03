@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
 
 use crate::components::card::{Card, CardContent, CardSize};
-use crate::components::icons::{IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise};
+use crate::components::icons::{
+    IconActivity, IconCoffee, IconFlame, IconMoon, IconPlus, IconSun, IconSunrise,
+};
 use crate::components::progress::CalorieRing;
 use crate::state::food_db::find_food;
 use crate::state::models::{Meal, MealType};
@@ -100,8 +102,6 @@ pub fn Dashboard() -> Element {
     } else {
         0
     };
-
-
 
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
@@ -243,8 +243,20 @@ pub fn Dashboard() -> Element {
 }
 
 #[component]
-fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str, index: usize) -> Element {
-    let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
+fn MacroTile(
+    label: &'static str,
+    current: f64,
+    target: f64,
+    unit: &'static str,
+    color: &'static str,
+    text_color: &'static str,
+    index: usize,
+) -> Element {
+    let pct = if target > 0.0 {
+        (current / target * 100.0).min(100.0)
+    } else {
+        0.0
+    };
     let delay_ms = index * 100;
     rsx! {
         Card {
