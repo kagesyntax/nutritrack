@@ -10,8 +10,12 @@ fn storage() -> Option<web_sys::Storage> {
 
 pub fn load_logs() -> Vec<DayLog> {
     let store = storage();
-    let json = store.as_ref().and_then(|s| s.get_item(LOGS_KEY).ok()).flatten();
-    json.and_then(|j| serde_json::from_str(&j).ok()).unwrap_or_default()
+    let json = store
+        .as_ref()
+        .and_then(|s| s.get_item(LOGS_KEY).ok())
+        .flatten();
+    json.and_then(|j| serde_json::from_str(&j).ok())
+        .unwrap_or_default()
 }
 
 pub fn save_logs(logs: &[DayLog]) {
@@ -24,8 +28,12 @@ pub fn save_logs(logs: &[DayLog]) {
 
 pub fn load_settings() -> UserSettings {
     let store = storage();
-    let json = store.as_ref().and_then(|s| s.get_item(SETTINGS_KEY).ok()).flatten();
-    json.and_then(|j| serde_json::from_str(&j).ok()).unwrap_or_default()
+    let json = store
+        .as_ref()
+        .and_then(|s| s.get_item(SETTINGS_KEY).ok())
+        .flatten();
+    json.and_then(|j| serde_json::from_str(&j).ok())
+        .unwrap_or_default()
 }
 
 pub fn save_settings(settings: &UserSettings) {
