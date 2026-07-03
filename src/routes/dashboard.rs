@@ -148,7 +148,7 @@ pub fn Dashboard() -> Element {
 
     rsx! {
         div { class: "max-w-4xl mx-auto p-6",
-            div { class: "flex items-center justify-between mb-4",
+            div { class: "flex items-center justify-between mb-4 anim-dashboard-entrance", style: "--entrance-delay: 0ms",
                 div {
                     h1 { class: "text-2xl font-bold text-foreground font-heading", "Dashboard" }
                     p { class: "text-sm text-muted-foreground mt-1", "{today}" }
@@ -161,7 +161,7 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            div { class: "flex items-center gap-2 flex-wrap mb-6",
+            div { class: "flex items-center gap-2 flex-wrap mb-6 anim-dashboard-entrance", style: "--entrance-delay: 100ms",
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
@@ -173,7 +173,7 @@ pub fn Dashboard() -> Element {
             }
 
             div { class: "bento-grid mb-section-lg",
-                div { class: "bento-hero",
+                div { class: "bento-hero anim-dashboard-entrance", style: "--entrance-delay: 200ms",
                     Card { size: CardSize::Sm,
                         CardContent {
                             div { class: "calorie-hero",
@@ -203,15 +203,15 @@ pub fn Dashboard() -> Element {
                 }
 
                 div { class: "macro-grid",
-                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
-                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
-                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
-                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber" }
+                    MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein", index: 0 }
+                    MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs", index: 1 }
+                    MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat", index: 2 }
+                    MacroTile { label: "Fiber", current: total_fiber, target: targets.fiber_g, unit: "g", color: "bg-fiber", text_color: "text-fiber", index: 3 }
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
-            div { class: "timeline",
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4 anim-dashboard-entrance", style: "--entrance-delay: 400ms", "Today's Meals" }
+            div { class: "timeline anim-dashboard-entrance", style: "--entrance-delay: 400ms",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
                         Link {
@@ -243,10 +243,12 @@ pub fn Dashboard() -> Element {
 }
 
 #[component]
-fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
+fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str, index: usize) -> Element {
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
+    let delay_ms = index * 100;
     rsx! {
         Card {
+            class: "anim-dashboard-entrance",
             CardContent { class: "macro-tile-content",
                 div { class: "macro-tile-header",
                     div { class: "macro-tile-dot {color}" }
@@ -258,7 +260,15 @@ fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str,
                 }
                 div { class: "macro-tile-bar-row",
                     div { class: "macro-bar-track",
-                        div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+                        div {
+                            class: "macro-bar-fill {color} anim-progress-bar-fill",
+                            style: "width: {pct:.0}%; --bar-delay: {delay_ms}ms",
+                            role: "progressbar",
+                            aria_valuenow: "{pct:.0}",
+                            aria_valuemin: "0",
+                            aria_valuemax: "100",
+                            aria_label: "{label} progress: {pct:.0} percent",
+                        }
                     }
                     span { class: "macro-tile-pct", "{pct:.0}%" }
                 }
