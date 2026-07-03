@@ -190,7 +190,6 @@ input {
 .py-1 { padding-top: 4px; padding-bottom: 4px; }
 .py-1_5 { padding-top: 6px; padding-bottom: 6px; }
 .py-2 { padding-top: 8px; padding-bottom: 8px; }
-.py-2_5 { padding-top: 10px; padding-bottom: 10px; }
 .py-3 { padding-top: 12px; padding-bottom: 12px; }
 .py-4 { padding-top: 16px; padding-bottom: 16px; }
 .py-6 { padding-top: 24px; padding-bottom: 24px; }
@@ -249,7 +248,7 @@ input {
 .font-bold { font-weight: 700; }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
-.text-10px { font-size: 10px; line-height: 1.25; }
+.text-xxs { font-size: 10px; line-height: 1.25; }
 .text-xs { font-size: 12px; line-height: 1.5; }
 .text-sm { font-size: 14px; line-height: 1.5; }
 .text-md { font-size: 16px; line-height: 1.5; }
