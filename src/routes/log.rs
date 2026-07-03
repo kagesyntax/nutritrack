@@ -46,9 +46,6 @@ pub fn Log() -> Element {
 
     let settings = use_context::<Signal<UserSettings>>();
     let target = settings.read().targets.calories;
-    let _target_p = settings.read().targets.protein_g;
-    let _target_c = settings.read().targets.carbs_g;
-    let _target_f = settings.read().targets.fat_g;
 
     let total_cal: f64 = meals.iter().filter_map(|(_, m)| m.as_ref()).flat_map(|m| &m.entries).filter_map(|e| {
         find_food(&e.food_id).map(|f| f.calories * e.servings)
