@@ -26,6 +26,7 @@ pub fn Card(
     }
     if is_clickable {
         classes.push(hover);
+        classes.push("card-pressable");
     }
     let base = classes.join(" ");
     rsx! {
