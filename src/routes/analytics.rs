@@ -1,8 +1,9 @@
 use dioxus::prelude::*;
 
-#[allow(unused_imports)]
-use crate::components::card::{Card, CardContent, CardHeader, CardTitle};
+use crate::components::card::{Card, CardContent};
+use crate::components::icons::IconActivity;
 use crate::components::icons::IconFlame;
+use crate::components::icons::IconTarget;
 use crate::state::food_db::find_food;
 
 fn day_total_cals(day: &crate::state::models::DayLog) -> f64 {
@@ -26,6 +27,19 @@ fn avg_cals_for(days: &[&crate::state::models::DayLog]) -> f64 {
 }
 
 #[component]
+fn CompactStat(icon: Element, value: String, label: &'static str) -> Element {
+    rsx! {
+        div { class: "stat-compact",
+            div { class: "stat-compact-glyph", {icon} }
+            div {
+                span { class: "stat-compact-value", "{value}" }
+                span { class: "text-xs text-muted-foreground ml-1", "{label}" }
+            }
+        }
+    }
+}
+
+#[component]
 pub fn Analytics() -> Element {
     let logs = use_context::<Signal<Vec<crate::state::models::DayLog>>>();
     let settings = use_context::<Signal<crate::state::models::UserSettings>>();
@@ -45,11 +59,9 @@ pub fn Analytics() -> Element {
         return rsx! {
             div { class: "max-w-4xl mx-auto p-6 space-y-6",
                 h1 { class: "text-2xl font-bold text-foreground font-heading", "Analytics" }
-                div { class: "empty-state",
-                    div { class: "flex flex-col items-center gap-2",
-                        p { class: "text-lg font-medium text-foreground", "No data yet" }
-                        p { class: "text-sm text-muted-foreground", "Log some meals to see your analytics." }
-                    }
+                div { class: "flex flex-col items-center gap-4",
+                    p { class: "text-lg font-medium text-foreground", "No data yet" }
+                    p { class: "text-sm text-muted-foreground", "Log some meals to see your analytics." }
                 }
             }
         };
@@ -69,14 +81,6 @@ pub fn Analytics() -> Element {
     } else {
         "N/A".to_string()
     };
-
-    // --- Today logged indicator ---
-    let today_logged = recent
-        .iter()
-        .rev()
-        .next()
-        .map(|d| d.date == today && day_has_food(d))
-        .unwrap_or(false);
 
     // --- Consistency (last 30 days) ---
     let last_30: Vec<_> = recent.iter().rev().take(30).collect();
@@ -99,17 +103,7 @@ pub fn Analytics() -> Element {
         }
         s
     };
-    let streak_s = if streak == 1 { "" } else { "s" };
-
-    // --- Dot color for today indicator ---
-    let dot_color = if today_logged { "#22c55e" } else { "#ef4444" };
-
-    // --- Avg vs target bar width ---
-    let vs_target_width = if target > 0.0 {
-        (avg_cal / target).min(1.0) * 100.0
-    } else {
-        0.0
-    };
+    let streak_label = if streak == 1 { "day" } else { "days" };
 
     // --- Weekly comparison ---
     let days_this_week: Vec<_> = recent.iter().rev().take(7).collect();
@@ -180,215 +174,111 @@ pub fn Analytics() -> Element {
         (day.date.clone(), label, pct, spark_color)
     }).collect();
 
-    // --- Bar chart data (last 14 days) ---
-    let recent_days: Vec<_> = recent.iter().rev().take(14).map(|day| {
+    // --- Last 30 days for the day strip ---
+    let last_30_days: Vec<_> = recent.iter().rev().take(30).map(|day| {
         let cals = day_total_cals(day);
-        let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
-        let bar_color = if pct > 100.0 { "bg-fat" } else if pct > 75.0 { "bg-carbs" } else { "bg-primary" };
-        (day.date.clone(), format!("{:.0}", cals), pct, bar_color)
+        let has_food = day_has_food(day);
+        let color = if !has_food {
+            "var(--color-surface-tertiary)".to_string()
+        } else {
+            let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
+            if pct >= 90.0 && pct <= 110.0 {
+                "#22c55e".to_string()
+            } else if pct >= 75.0 {
+                "#eab308".to_string()
+            } else {
+                "#ef4444".to_string()
+            }
+        };
+        (day.date.clone(), cals, color)
     }).collect();
 
     rsx! {
         div { class: "max-w-4xl mx-auto p-6 space-y-6",
             h1 { class: "text-2xl font-bold text-foreground font-heading", "Analytics" }
 
-            // === Overview ===
+            // === Compact Stat Row ===
             Card {
-                CardHeader {
-                    CardTitle { class: "font-heading", "Overview" }
-                }
-                CardContent {
-                    div { class: "grid grid-cols-1 md-grid-cols-3 gap-4",
-                        StatCard {
-                            label: "Days Tracked",
-                            value: format!("{}", recent.len()),
-                            unit: "days",
-                            div {
-                                class: "flex items-center gap-1_5 mt-1",
-                                div {
-                                    style: "width: 8px; height: 8px; border-radius: 50%; background: {dot_color};",
-                                }
-                                span { class: "text-xs text-muted-foreground",
-                                    if today_logged { "Logged today" } else { "Not logged today" }
-                                }
-                            }
-                        }
-                        StatCard {
-                            label: "Avg Daily Calories",
-                            value: avg_str,
-                            unit: "kcal",
-                            div {
-                                class: "flex items-center gap-1 mt-1",
-                                span { class: "{weekly_trend_color} text-sm font-bold", "{weekly_arrow}" }
-                                span { class: "text-xs text-muted-foreground", "{weekly_trend_text}" }
-                            }
-                        }
-                        StatCard {
-                            label: "Consistency",
-                            value: format!("{:.0}%", consistency_pct),
-                            unit: "30 days",
-                            ConsistencyRing { pct: consistency_pct }
-                        }
-                        StatCard {
-                            label: "Current Streak",
-                            value: format!("{}", streak),
-                            unit: "days",
-                            div { class: "mt-1",
-                                if streak > 0 {
-                                    IconFlame { size: 14 }
-span { class: "text-xs text-muted-foreground ml-1", "{streak} day{streak_s}" }
-                                } else {
-                                    span { class: "text-xs text-muted-foreground", "Start logging to build a streak" }
-                                }
-                            }
-                        }
-                        StatCard {
-                            label: "Avg vs Target",
-                            value: pct_str,
-                            unit: "",
-                            div { class: "macro-bar-track mt-2",
-                                div {
-                                    class: "macro-bar-fill bg-primary",
-                                    style: "width: {vs_target_width:.0}%",
-                                }
-                            }
-                        }
+                CardContent { class: "pb-4",
+                    div { class: "stat-compact-row",
+                        CompactStat { icon: rsx! { IconActivity { size: 14 } }, value: format!("{}", recent.len()), label: "days" }
+                        CompactStat { icon: rsx! { IconTarget { size: 14 } }, value: avg_str, label: "avg kcal" }
+                        CompactStat { icon: rsx! { IconTarget { size: 14 } }, value: format!("{:.0}%", consistency_pct), label: "consistent" }
+                        CompactStat { icon: rsx! { IconFlame { size: 14 } }, value: format!("{}", streak), label: streak_label }
+                        CompactStat { icon: rsx! { IconTarget { size: 14 } }, value: pct_str, label: "of goal" }
                     }
                 }
             }
 
             // === Macro Distribution ===
             Card {
-                CardHeader {
-                    CardTitle { class: "font-heading", "Macro Distribution" }
-                }
                 CardContent {
-                    div { class: "space-y-3",
-                        div {
-                            div { class: "flex justify-between text-sm mb-1",
-                                span { class: "text-muted-foreground", "Protein" }
-                                span { class: "font-medium tabular-nums", "{protein_pct:.0}%" }
+                    div { class: "flex flex-col gap-2",
+                        span { class: "text-sm font-medium text-foreground font-heading", "Macro Distribution" }
+                        div { class: "macro-bar-segmented",
+                            if protein_pct > 0.0 {
+                                div { class: "macro-bar-segment bg-protein", style: "width: {protein_pct:.0}%" }
                             }
-                            div { class: "macro-bar-track",
-                                div { class: "macro-bar-fill bg-protein", style: "width: {protein_pct:.0}%" }
+                            if carbs_pct > 0.0 {
+                                div { class: "macro-bar-segment bg-carbs", style: "width: {carbs_pct:.0}%" }
                             }
-                        }
-                        div {
-                            div { class: "flex justify-between text-sm mb-1",
-                                span { class: "text-muted-foreground", "Carbs" }
-                                span { class: "font-medium tabular-nums", "{carbs_pct:.0}%" }
-                            }
-                            div { class: "macro-bar-track",
-                                div { class: "macro-bar-fill bg-carbs", style: "width: {carbs_pct:.0}%" }
+                            if fat_pct > 0.0 {
+                                div { class: "macro-bar-segment bg-fat", style: "width: {fat_pct:.0}%" }
                             }
                         }
-                        div {
-                            div { class: "flex justify-between text-sm mb-1",
-                                span { class: "text-muted-foreground", "Fat" }
-                                span { class: "font-medium tabular-nums", "{fat_pct:.0}%" }
-                            }
-                            div { class: "macro-bar-track",
-                                div { class: "macro-bar-fill bg-fat", style: "width: {fat_pct:.0}%" }
-                            }
+                        div { class: "flex justify-between text-xs",
+                            span { class: "text-protein font-medium", "P {protein_pct:.0}%" }
+                            span { class: "text-carbs font-medium", "C {carbs_pct:.0}%" }
+                            span { class: "text-fat font-medium", "F {fat_pct:.0}%" }
                         }
                     }
                 }
             }
 
-            // === Last 14 Days + Weekly Trend ===
+            // === 7-Day Trend Sparkline ===
             Card {
-                CardHeader {
-                    CardTitle { class: "font-heading", "Last 14 Days" }
-                }
-                CardContent {
-                    div { class: "space-y-3",
-                        for (date, cals_str, pct, bar_color) in &recent_days {
-                            div { class: "day-bar",
-                                span { class: "day-bar-date", "{date}" }
-                                div { class: "day-bar-track",
-                                    div {
-                                        class: "day-bar-fill {bar_color}",
-                                        style: "width: {pct.min(100.0):.0}%",
-                                    }
-                                }
-                                span { class: "day-bar-cals", "{cals_str}" }
-                            }
-                        }
-                    }
-
-                    div { class: "mt-1 pt-3 border-t border-border",
-                        p { class: "text-sm font-medium text-foreground mb-1", "7-Day Trend" }
-                        div { class: "flex gap-2",
-                            for (date, label, pct, spark_color) in &week_spark {
+                CardContent { class: "space-y-3",
+                    div { class: "flex flex-col gap-2",
+                        span { class: "text-sm font-medium text-foreground font-heading", "7-Day Trend" }
+                        div { class: "sparkline",
+                            for (date, _label, pct, spark_color) in &week_spark {
                                 div {
                                     key: "{date}",
-                                    class: "flex flex-col items-center gap-1",
-                                    div {
-                                        class: "rounded-lg",
-                                        style: "width: 24px; height: 24px; background: {spark_color}; opacity: 0.8;",
-                                        title: "{date}: {pct:.0}% of target",
-                                    }
-                                    span { class: "text-xs text-muted-foreground", "{label}" }
+                                    class: "sparkline-bar",
+                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
+                                    title: "{date}: {pct:.0}% of target",
+                                }
+                            }
+                        }
+                        div { class: "flex justify-between text-xxs text-muted-foreground",
+                            for (_, label, _, _) in &week_spark {
+                                span { "{label}" }
+                            }
+                        }
+                    }
+
+                    div { class: "flex items-center gap-2",
+                        span { class: "{weekly_trend_color} text-sm font-bold", "{weekly_arrow}" }
+                        span { class: "text-xs text-muted-foreground", "{weekly_trend_text}" }
+                    }
+                }
+            }
+
+            // === Last 30 Days ===
+            Card {
+                CardContent {
+                    div { class: "flex flex-col gap-2",
+                        span { class: "text-sm font-medium text-foreground font-heading", "Last 30 Days" }
+                        div { class: "day-strip",
+                            for day in &last_30_days {
+                                div {
+                                    class: "day-strip-item",
+                                    style: "background: {day.2}",
+                                    title: "{day.0}: {day.1:.0} kcal",
                                 }
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn StatCard(
-    label: &'static str,
-    value: String,
-    unit: &'static str,
-    children: Element,
-) -> Element {
-    rsx! {
-        Card { class: "hover-shadow-md hover--translate-y-0_5 transition-all duration-200",
-            CardContent { class: "stat-card",
-                p { class: "stat-card-label", "{label}" }
-                p { class: "stat-card-value", "{value}" }
-                p { class: "stat-card-unit", "{unit}" }
-                {children}
-            }
-        }
-    }
-}
-
-#[component]
-fn ConsistencyRing(pct: f64) -> Element {
-    let ring_color = if pct >= 80.0 {
-        "#22c55e"
-    } else if pct >= 50.0 {
-        "#eab308"
-    } else {
-        "#ef4444"
-    };
-
-    rsx! {
-        div { class: "flex justify-center mt-1",
-            svg {
-                width: "40",
-                height: "40",
-                view_box: "0 0 40 40",
-                circle {
-                    cx: "20", cy: "20", r: "17",
-                    fill: "none",
-                    stroke: "var(--color-surface-tertiary)",
-                    stroke_width: "3",
-                }
-                circle {
-                    cx: "20", cy: "20", r: "17",
-                    fill: "none",
-                    stroke: "{ring_color}",
-                    stroke_width: "3",
-                    stroke_linecap: "round",
-                    stroke_dasharray: "106.8",
-                    stroke_dashoffset: "{106.8 - (106.8 * pct / 100.0)}",
-                    transform: "rotate(-90 20 20)",
                 }
             }
         }
