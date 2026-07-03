@@ -411,9 +411,9 @@ input::placeholder { color: var(--color-muted-foreground); }
 .space-y-6 > * + * { margin-top: 24px; }
 
 /* Section spacing */
-.mb-section-lg { margin-bottom: 28px; }
+.mb-section-lg { margin-bottom: 24px; }
 @media (max-width: 479px) {
-  .mb-section-lg { margin-bottom: 20px; }
+  .mb-section-lg { margin-bottom: 16px; }
 }
 
 /* ===== COMPONENTS ===== */
