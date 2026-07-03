@@ -146,8 +146,8 @@ pub fn Dashboard() -> Element {
     };
 
     rsx! {
-        div { class: "max-w-4xl mx-auto p-6 space-y-6",
-            div { class: "flex items-center justify-between",
+        div { class: "max-w-4xl mx-auto p-6",
+            div { class: "flex items-center justify-between mb-4",
                 div {
                     h1 { class: "text-2xl font-bold text-foreground font-heading", "Dashboard" }
                     p { class: "text-sm text-muted-foreground mt-1", "{today}" }
@@ -160,7 +160,7 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            div { class: "flex items-center gap-2 flex-wrap",
+            div { class: "flex items-center gap-2 flex-wrap mb-6",
                 div { class: "inline-flex items-center gap-1_5 px-3 py-1_5 rounded-full bg-primary text-white text-xs font-medium",
                     IconFlame { size: 14 }
                     span { "{streak} day streak" }
@@ -171,7 +171,7 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            div { class: "bento-grid",
+            div { class: "bento-grid mb-section-lg",
                 div { class: "bento-hero",
                     Card { size: CardSize::Sm,
                         CardContent {
@@ -200,7 +200,7 @@ pub fn Dashboard() -> Element {
                     }
                 }
 
-                div { class: "bento-grid",
+                div { class: "macro-grid",
                     MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
                     MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
                     MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
@@ -208,7 +208,7 @@ pub fn Dashboard() -> Element {
                 }
             }
 
-            h2 { class: "text-lg font-semibold text-foreground font-heading", "Today's Meals" }
+            h2 { class: "text-lg font-semibold text-foreground font-heading mb-4", "Today's Meals" }
             div { class: "timeline",
                 for (meal_type, cals, count) in &meal_summaries {
                     if *count == 0 {
@@ -244,13 +244,21 @@ pub fn Dashboard() -> Element {
 fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
     rsx! {
-        Card { size: CardSize::Sm,
-            CardContent { class: "text-center",
-                p { class: "text-xs text-muted-foreground uppercase tracking-wider", "{label}" }
-                p { class: "text-xl font-bold tabular-nums {text_color} mt-1", "{current:.0}" }
-                p { class: "text-xs text-muted-foreground", "/ {target:.0} {unit}" }
-                div { class: "macro-bar-track mt-2",
-                    div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+        Card {
+            CardContent { class: "macro-tile-content",
+                div { class: "macro-tile-header",
+                    div { class: "macro-tile-dot {color}" }
+                    span { class: "macro-tile-label", "{label}" }
+                }
+                div { class: "macro-tile-values",
+                    span { class: "macro-tile-current {text_color}", "{current:.0}" }
+                    span { class: "macro-tile-target", "/ {target:.0} {unit}" }
+                }
+                div { class: "macro-tile-bar-row",
+                    div { class: "macro-bar-track",
+                        div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+                    }
+                    span { class: "macro-tile-pct", "{pct:.0}%" }
                 }
             }
         }
