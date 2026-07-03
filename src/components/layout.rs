@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::app::Route;
-use crate::components::icons::{
-    IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings,
-};
+use crate::components::icons::{IconBarChart2, IconClock, IconEdit3, IconHome, IconSettings};
 
 #[component]
 pub fn AppShell() -> Element {

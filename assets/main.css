@@ -117,10 +117,424 @@ input {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes sparkline-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
 
 .animate-spin { animation: spin 1s linear infinite; }
 .animate-fade-in { animation: fadeIn 0.3s ease-out; }
 .animate-slide-in { animation: slide-in-from-bottom 0.2s ease-out; }
+.anim-sparkline-bar {
+  animation: sparkline-grow 400ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: bottom;
+}
+
+/* Dashboard entrance animation */
+@keyframes dashboard-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-dashboard-entrance {
+  opacity: 0;
+  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Streak badge pulse — GPU-composited transform only, runs 3 times then stops */
+@keyframes streak-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.anim-streak-pulse {
+  animation: streak-pulse 2s ease-in-out 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-streak-pulse {
+    animation: none;
+  }
+}
+
+/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
+@keyframes progress-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-progress-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-progress-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* ===== SWARM SHARED ANIMATION PLATFORM ===== */
+
+/* Reduced-motion safety: disable all user-facing motion by default */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-spin,
+  .animate-fade-in,
+  .animate-slide-in,
+  .anim-dashboard-entrance,
+  .anim-fade-up,
+  .anim-scale-in,
+  .anim-progress-bar-fill,
+  .anim-badge-pulse,
+  .anim-theme-active,
+  .anim-timeline-row,
+  .anim-sparkline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .skeleton {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Generic entrance utilities */
+.anim-fade-up {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeIn 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--delay-ms, 0ms);
+  will-change: transform, opacity;
+}
+
+.anim-scale-in {
+  opacity: 0;
+  transform: scale(0.94);
+  animation: scaleIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: var(--delay-ms, 0ms);
+  will-change: transform, opacity;
+}
+
+@keyframes scaleIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Progress bar fill animation */
+.anim-progress-bar-fill {
+  transform-origin: left;
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+
+/* Badge pulse */
+@keyframes badge-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.45); }
+  70% { box-shadow: 0 0 0 10px rgba(217, 119, 87, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0); }
+}
+.anim-badge-pulse {
+  animation: badge-pulse 2200ms ease-out 1;
+}
+
+/* Theme selector active card */
+@keyframes theme-active {
+  to { transform: scale(1); }
+}
+.theme-card-active {
+  animation: theme-active 180ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Timeline rows */
+@keyframes timeline-row {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-timeline-row {
+  animation: timeline-row 200ms ease-out both;
+  animation-delay: var(--delay-ms, 0ms);
+}
+
+/* Toast notification animations */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.anim-toast {
+  opacity: 1;
+  animation: toast-in 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.anim-toast-hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+}
+
+/* Serving control feedback */
+.serving-btn:active {
+  transform: scale(0.92);
+  transition: transform 100ms ease-in;
+}
+
+/* Dashboard entrance animation */
+@keyframes dashboard-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-dashboard-entrance {
+  opacity: 0;
+  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Macro tile entrance stagger */
+.macro-grid > *:nth-child(1) { --entrance-delay: 300ms; }
+.macro-grid > *:nth-child(2) { --entrance-delay: 350ms; }
+.macro-grid > *:nth-child(3) { --entrance-delay: 400ms; }
+.macro-grid > *:nth-child(4) { --entrance-delay: 450ms; }
+
+/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
+@keyframes progress-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-progress-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-progress-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* ===== SWARM SHARED ANIMATION PLATFORM ===== */
+
+/* Reduced-motion safety: disable all user-facing motion by default */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-spin,
+  .animate-fade-in,
+  .animate-slide-in,
+  .anim-dashboard-entrance,
+  .anim-fade-up,
+  .anim-scale-in,
+  .anim-progress-bar-fill,
+  .anim-badge-pulse,
+  .anim-theme-active,
+  .anim-timeline-row,
+  .anim-sparkline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .skeleton {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Generic entrance utilities */
+.anim-fade-up {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeIn 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--delay-ms, 0ms);
+  will-change: transform, opacity;
+}
+
+.anim-scale-in {
+  opacity: 0;
+  transform: scale(0.94);
+  animation: scaleIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: var(--delay-ms, 0ms);
+  will-change: transform, opacity;
+}
+
+@keyframes scaleIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Progress bar fill animation */
+.anim-progress-bar-fill {
+  transform-origin: left;
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+
+/* Badge pulse */
+@keyframes badge-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.45); }
+  70% { box-shadow: 0 0 0 10px rgba(217, 119, 87, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0); }
+}
+.anim-badge-pulse {
+  animation: badge-pulse 2200ms ease-out 1;
+}
+
+/* Theme selector active card */
+@keyframes theme-active {
+  to { transform: scale(1); }
+}
+.theme-card-active {
+  animation: theme-active 180ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Timeline rows */
+@keyframes timeline-row {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-timeline-row {
+  animation: timeline-row 200ms ease-out both;
+  animation-delay: var(--delay-ms, 0ms);
+}
+
+/* Toast notification animations */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.anim-toast {
+  opacity: 1;
+  animation: toast-in 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.anim-toast-hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+}
+
+/* Serving control feedback */
+.serving-btn:active {
+  transform: scale(0.92);
+  transition: transform 100ms ease-in;
+}
+
+/* Dashboard entrance animation */
+@keyframes dashboard-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-dashboard-entrance {
+  opacity: 0;
+  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Stagger priorities: hero > chips > tiles > timeline */
+.bento-hero { --entrance-delay: 180ms; }
+.bento-hero + .macro-grid { --entrance-delay: 260ms; }
+.timeline > *:nth-child(1) { --entrance-delay: 320ms; }
+.timeline > *:nth-child(2) { --entrance-delay: 360ms; }
+.timeline > *:nth-child(3) { --entrance-delay: 400ms; }
+.timeline > *:nth-child(4) { --entrance-delay: 440ms; }
+
+/* Macro tile entrance stagger */
+.macro-grid > *:nth-child(1) { --entrance-delay: 280ms; }
+.macro-grid > *:nth-child(2) { --entrance-delay: 320ms; }
+.macro-grid > *:nth-child(3) { --entrance-delay: 360ms; }
+.macro-grid > *:nth-child(4) { --entrance-delay: 400ms; }
+
+/* Sparkline stagger */
+.sparkline-bar:nth-child(1) { --bar-delay: 140ms; }
+.sparkline-bar:nth-child(2) { --bar-delay: 165ms; }
+.sparkline-bar:nth-child(3) { --bar-delay: 190ms; }
+.sparkline-bar:nth-child(4) { --bar-delay: 215ms; }
+.sparkline-bar:nth-child(5) { --bar-delay: 240ms; }
+.sparkline-bar:nth-child(6) { --bar-delay: 265ms; }
+.sparkline-bar:nth-child(7) { --bar-delay: 290ms; }
+
+/* Card feedback extend */
+.card {
+  transition: box-shadow 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-pressable {
+  touch-action: manipulation;
+}
+.card-pressable:active {
+  transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+}
+.card-pressable:hover {
+  transform: translateY(-1px);
+}
+
+/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
+@keyframes progress-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-progress-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-progress-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* Progress bar fill animation — uses scaleX for GPU-composited 60fps */
+@keyframes progress-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-progress-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-progress-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
 
 /* Layout */
 .app-shell { display: flex; height: 100vh; background: var(--color-bg); color: var(--color-text); }
@@ -383,6 +797,24 @@ a:active,
 }
 .card:active { transform: scale(0.98); }
 
+/* Card press/tap feedback */
+.card-pressable {
+  touch-action: manipulation;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-pressable:active {
+  transform: scale(0.97);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: transform 100ms ease-in,
+              box-shadow 100ms ease-in;
+}
+.card-pressable:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
 /* Group hover states */
 .group:hover .group-hover-shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
 .group:hover .group-hover--translate-y-0_5 { transform: translateY(-2px); }
@@ -427,7 +859,15 @@ input::placeholder { color: var(--color-muted-foreground); }
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover {
+  box-shadow: 0 10px 25px -3px rgba(0,0,0,0.07), 0 4px 10px -2px rgba(0,0,0,0.04);
+}
+.card:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  transition: transform 100ms ease-in, box-shadow 100ms ease-in;
 }
 .card-header {
   padding: 20px 24px 16px;
@@ -750,6 +1190,34 @@ input::placeholder { color: var(--color-muted-foreground); }
 .bento-hero .card-sm .card-content { padding: 20px 24px; }
 
 
+/* Macro Tile hover/press animations */
+.anim-macro-tile {
+  will-change: transform;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+.anim-macro-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 10px -2px rgba(0,0,0,0.06);
+}
+.anim-macro-tile:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  transition: transform 150ms ease-in, box-shadow 150ms ease-in;
+}
+.anim-macro-tile:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-macro-tile {
+    transition: none;
+  }
+  .anim-macro-tile:hover,
+  .anim-macro-tile:active {
+    transform: none;
+  }
+}
+
 /* Macro Tile (spacious redesign) */
 .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-column: span 2; }
 .macro-tile-content { display: flex; flex-direction: column; gap: 10px; }
@@ -898,5 +1366,13 @@ input::placeholder { color: var(--color-muted-foreground); }
     --color-carbs: #fbbf24;
     --color-fat: #fb7185;
     --color-fiber: #a78bfa;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-sparkline-bar {
+    animation: none;
+    transform: scaleY(1);
   }
 }
