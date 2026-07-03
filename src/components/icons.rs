@@ -337,3 +337,134 @@ pub fn IconArrowLeft(size: Option<u32>) -> Element {
         }
     }
 }
+
+#[component]
+pub fn IconTrendingUp(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            polyline { points: "23 6 13.5 15.5 8.5 10.5 1 18" }
+            polyline { points: "17 6 23 6 23 12" }
+        }
+    }
+}
+
+#[component]
+pub fn IconTrendingDown(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            polyline { points: "23 18 13.5 8.5 8.5 13.5 1 6" }
+            polyline { points: "17 18 23 18 23 12" }
+        }
+    }
+}
+
+#[component]
+pub fn IconActivity(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            path { d: "M22 12h-4l-3 9L9 3l-3 9H2" }
+        }
+    }
+}
+
+#[component]
+pub fn IconTarget(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            circle { cx: "12", cy: "12", r: "10" }
+            circle { cx: "12", cy: "12", r: "6" }
+            circle { cx: "12", cy: "12", r: "2" }
+        }
+    }
+}
+
+#[component]
+pub fn IconCheck(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            polyline { points: "20 6 9 17 4 12" }
+        }
+    }
+}
+
+#[component]
+pub fn IconDroplets(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            path { d: "M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" }
+        }
+    }
+}
+
+#[component]
+pub fn IconAward(size: Option<u32>) -> Element {
+    let s = size.unwrap_or(24);
+    rsx! {
+        svg {
+            width: "{s}",
+            height: "{s}",
+            view_box: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "2",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            circle { cx: "12", cy: "8", r: "6" }
+            path { d: "M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" }
+        }
+    }
+}
