@@ -130,6 +130,24 @@ input {
   transform-origin: bottom;
 }
 
+/* Dashboard entrance animation */
+@keyframes dashboard-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-dashboard-entrance {
+  opacity: 0;
+  animation: dashboard-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Streak badge pulse — GPU-composited transform only, runs 3 times then stops */
 @keyframes streak-pulse {
   0%, 100% { transform: scale(1); }
@@ -427,8 +445,6 @@ a:active,
 .card-pressable {
   touch-action: manipulation;
   cursor: pointer;
-}
-.card-pressable {
   transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
