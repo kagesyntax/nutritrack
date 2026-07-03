@@ -1110,7 +1110,12 @@ input::placeholder { color: var(--color-muted-foreground); }
 .calorie-ring { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
 .calorie-ring-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
 .calorie-ring-bg { fill: none; stroke: var(--color-surface-tertiary); stroke-width: 8; }
-.calorie-ring-fg { fill: none; stroke: var(--color-primary); stroke-width: 8; stroke-linecap: round; }
+.calorie-ring-fg { fill: none; stroke: var(--color-primary); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease-out; }
+.calorie-ring-animated .calorie-ring-fg { animation: calorie-ring-fill 0.5s ease-out both; }
+@keyframes calorie-ring-fill {
+    from { stroke-dashoffset: 326.73; }
+    to { stroke-dashoffset: var(--calorie-ring-target-offset); }
+}
 .calorie-ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .calorie-ring-value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text-primary); font-family: var(--font-mono); }
 .calorie-ring-of { font-size: 10px; color: var(--color-text-tertiary); }
