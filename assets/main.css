@@ -680,6 +680,12 @@ input::placeholder { color: var(--color-muted-foreground); }
 .timeline-add { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 10px; border-radius: 8px; color: var(--color-muted-foreground); cursor: pointer; transition: all 0.15s ease; border: 1px dashed var(--color-border); background: transparent; }
 .timeline-add:hover { color: var(--color-primary); border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
 
+/* Sparkline (used in dashboard hero) */
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 28px; }
+.sparkline-bar { width: 100%; border-radius: 2px; min-height: 2px; transition: height 0.3s ease; }
+
+/* Trend Chart */
+
 /* Trend Chart */
 .trend-chart { position: relative; height: 56px; }
 .trend-target-line { position: absolute; inset: 0; border-top: 1px dashed var(--color-muted-foreground); opacity: 0.25; pointer-events: none; z-index: 1; }
