@@ -680,7 +680,7 @@ input::placeholder { color: var(--color-muted-foreground); }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .cal-dot { width: 12px; height: 12px; border-radius: 3px; }
 .cal-dot-empty { visibility: hidden; }
-.cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.3; }
+.cal-dot-none { background: var(--color-surface-tertiary); opacity: 0.4; }
 .cal-dot-low { background: var(--color-muted); }
 .cal-dot-medium { background: var(--color-carbs); }
 .cal-dot-high { background: var(--color-primary); }
