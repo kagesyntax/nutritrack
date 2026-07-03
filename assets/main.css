@@ -285,7 +285,60 @@ input {
   transform: translateX(-50%) translateY(12px);
 }
 
+/* Log screen entrance */
+@keyframes log-entrance {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-log-entrance {
+  opacity: 0;
+  animation: log-entrance 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-log-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Log meal-section entrance stagger */
+.log-meal-stagger > *:nth-child(1) { --entrance-delay: 0ms; }
+.log-meal-stagger > *:nth-child(2) { --entrance-delay: 60ms; }
+.log-meal-stagger > *:nth-child(3) { --entrance-delay: 120ms; }
+.log-meal-stagger > *:nth-child(4) { --entrance-delay: 180ms; }
+.log-meal-stagger {
+  --log-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Log macro bar fill */
+@keyframes log-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-log-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: log-bar-fill 520ms var(--log-ease, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-log-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 /* Serving control feedback */
+@keyframes serving-value-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.anim-serving-pop {
+  animation: serving-value-pop 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 .serving-btn:active {
   transform: scale(0.92);
   transition: transform 100ms ease-in;
@@ -438,6 +491,51 @@ input {
   transform: translateX(-50%) translateY(12px);
 }
 
+/* Log screen entrance */
+@keyframes log-entrance {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-log-entrance {
+  opacity: 0;
+  animation: log-entrance 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-log-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Log meal-section entrance stagger */
+.log-meal-stagger > *:nth-child(1) { --entrance-delay: 0ms; }
+.log-meal-stagger > *:nth-child(2) { --entrance-delay: 60ms; }
+.log-meal-stagger > *:nth-child(3) { --entrance-delay: 120ms; }
+.log-meal-stagger > *:nth-child(4) { --entrance-delay: 180ms; }
+.log-meal-stagger {
+  --log-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Log macro bar fill */
+@keyframes log-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.anim-log-bar-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: log-bar-fill 520ms var(--log-ease, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-log-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 /* Serving control feedback */
 .serving-btn:active {
   transform: scale(0.92);
@@ -457,6 +555,43 @@ input {
 }
 @media (prefers-reduced-motion: reduce) {
   .anim-dashboard-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Settings entrance animation */
+@keyframes settings-entrance {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-settings-entrance {
+  opacity: 0;
+  animation: settings-entrance 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-settings-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* History/analytics entrance animation */
+@keyframes history-entrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-history-entrance {
+  opacity: 0;
+  animation: history-entrance 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--entrance-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-history-entrance {
     animation: none;
     opacity: 1;
     transform: none;
