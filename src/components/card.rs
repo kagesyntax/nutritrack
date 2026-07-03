@@ -13,7 +13,7 @@ pub fn Card(
     children: Element,
 ) -> Element {
     let is_clickable = onclick.is_some();
-    let hover = "cursor-pointer group transition-all duration-200 hover:shadow-md hover:-translate-y-0_5";
+    let hover = "cursor-pointer group transition-all duration-200 hover-shadow-md hover--translate-y-0_5";
     let mut classes = vec!["card"];
     if let Some(c) = class {
         classes.push(c);

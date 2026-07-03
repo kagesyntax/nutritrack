@@ -140,10 +140,10 @@ fn MealSection(meal_type: MealType, meal: Option<Meal>) -> Element {
     let cals_str = format!("{:.0} kcal", cals);
 
     let meal_icon = match meal_type {
-        MealType::Breakfast => rsx! { IconSunrise { size: 18 } },
-        MealType::Lunch => rsx! { IconSun { size: 18 } },
-        MealType::Dinner => rsx! { IconMoon { size: 18 } },
-        MealType::Snack => rsx! { IconCoffee { size: 18 } },
+        MealType::Breakfast => rsx! { IconSunrise { size: 16 } },
+        MealType::Lunch => rsx! { IconSun { size: 16 } },
+        MealType::Dinner => rsx! { IconMoon { size: 16 } },
+        MealType::Snack => rsx! { IconCoffee { size: 16 } },
     };
 
     rsx! {
@@ -252,7 +252,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
         .unwrap_or_default();
 
     rsx! {
-        div { class: "flex items-center justify-between py-2_5 gap-2 group",
+        div { class: "flex items-center justify-between py-2 gap-2 group",
             div { class: "flex-1 min-w-0",
                 p { class: "text-sm font-medium text-foreground truncate",
                     if let Some(f) = &food {
@@ -277,7 +277,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                                 }
                             }
                         },
-                        IconMinus { size: 12 }
+                        IconMinus { size: 14 }
                     }
                     span { class: "serving-value", "{servings_str}" }
                     button {
@@ -292,7 +292,7 @@ fn FoodEntryRow(entry: FoodEntry, meal_id: String, entry_index: usize) -> Elemen
                                 }
                             }
                         },
-                        IconPlus { size: 12 }
+                        IconPlus { size: 14 }
                     }
                 }
                 span { class: "text-xs tabular-nums text-muted-foreground w-12 text-right", "{cals_str}" }

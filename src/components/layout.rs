@@ -40,11 +40,11 @@ fn Sidebar() -> Element {
 #[component]
 fn NavLink(to: &'static str, label: &'static str) -> Element {
     let icon = match to {
-        "/" => rsx! { IconHome { size: 18 } },
-        "/log" => rsx! { IconEdit3 { size: 18 } },
-        "/history" => rsx! { IconClock { size: 18 } },
-        "/analytics" => rsx! { IconBarChart2 { size: 18 } },
-        "/settings" => rsx! { IconSettings { size: 18 } },
+        "/" => rsx! { IconHome { size: 24 } },
+        "/log" => rsx! { IconEdit3 { size: 24 } },
+        "/history" => rsx! { IconClock { size: 24 } },
+        "/analytics" => rsx! { IconBarChart2 { size: 24 } },
+        "/settings" => rsx! { IconSettings { size: 24 } },
         _ => VNode::empty(),
     };
 
@@ -79,11 +79,11 @@ fn MobileBottomNav() -> Element {
 #[component]
 fn MobileTab(to: &'static str, label: &'static str) -> Element {
     let icon = match to {
-        "/" => rsx! { IconHome { size: 20 } },
-        "/log" => rsx! { IconEdit3 { size: 20 } },
-        "/history" => rsx! { IconClock { size: 20 } },
-        "/analytics" => rsx! { IconBarChart2 { size: 20 } },
-        "/settings" => rsx! { IconSettings { size: 20 } },
+        "/" => rsx! { IconHome { size: 24 } },
+        "/log" => rsx! { IconEdit3 { size: 24 } },
+        "/history" => rsx! { IconClock { size: 24 } },
+        "/analytics" => rsx! { IconBarChart2 { size: 24 } },
+        "/settings" => rsx! { IconSettings { size: 24 } },
         _ => VNode::empty(),
     };
 
@@ -93,7 +93,7 @@ fn MobileTab(to: &'static str, label: &'static str) -> Element {
             active_class: "mobile-tab-active",
             to: to,
             {icon}
-            span { class: "text-10px leading-tight font-medium", "{label}" }
+            span { class: "text-xxs leading-tight font-medium", "{label}" }
         }
     }
 }

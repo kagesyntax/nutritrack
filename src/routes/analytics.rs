@@ -164,11 +164,11 @@ pub fn Analytics() -> Element {
         let cals = day_total_cals(day);
         let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
         let spark_color = if pct >= 90.0 && pct <= 110.0 {
-            "#22c55e"
+            "var(--color-success)"
         } else if pct >= 75.0 && pct <= 125.0 {
-            "#eab308"
+            "var(--color-warning)"
         } else {
-            "#ef4444"
+            "var(--color-destructive)"
         };
         let label = day.date.get(5..).unwrap_or(&day.date).to_string();
         (day.date.clone(), label, pct, spark_color)
@@ -183,11 +183,11 @@ pub fn Analytics() -> Element {
         } else {
             let pct = if target > 0.0 { (cals / target) * 100.0 } else { 0.0 };
             if pct >= 90.0 && pct <= 110.0 {
-                "#22c55e".to_string()
+                "var(--color-success)".to_string()
             } else if pct >= 75.0 {
-                "#eab308".to_string()
+                "var(--color-warning)".to_string()
             } else {
-                "#ef4444".to_string()
+                "var(--color-destructive)".to_string()
             }
         };
         (day.date.clone(), cals, color)
@@ -240,17 +240,21 @@ pub fn Analytics() -> Element {
                 CardContent { class: "space-y-3",
                     div { class: "flex flex-col gap-2",
                         span { class: "text-sm font-medium text-foreground font-heading", "7-Day Trend" }
-                        div { class: "sparkline",
-                            for (date, _label, pct, spark_color) in &week_spark {
-                                div {
-                                    key: "{date}",
-                                    class: "sparkline-bar",
-                                    style: "height: {pct.min(100.0):.0}%; background: {spark_color}",
-                                    title: "{date}: {pct:.0}% of target",
+                        div { class: "trend-chart",
+                            div { class: "trend-target-line" }
+                            div { class: "trend-bars",
+                                for (date, _label, pct, spark_color) in &week_spark {
+                                    div { key: "{date}", class: "trend-bar-group",
+                                        div {
+                                            class: "trend-bar",
+                                            style: "height: {pct.max(4.0).min(100.0):.0}%; background: {spark_color}",
+                                            title: "{date}: {pct:.0}% of target",
+                                        }
+                                    }
                                 }
                             }
                         }
-                        div { class: "flex justify-between text-xxs text-muted-foreground",
+                        div { class: "trend-labels",
                             for (_, label, _, _) in &week_spark {
                                 span { "{label}" }
                             }

@@ -101,8 +101,6 @@ pub fn Dashboard() -> Element {
         0
     };
 
-    let remaining = target_cal - total_cal;
-
     let week_spark: Vec<(String, f64, f64, String)> = {
         let mut days = Vec::new();
         let cursor = js_sys::Date::new_0();
@@ -134,11 +132,11 @@ pub fn Dashboard() -> Element {
                 0.0
             };
             let color = if pct >= 90.0 && pct <= 110.0 {
-                "#22c55e"
+                "var(--color-success)"
             } else if pct >= 75.0 {
-                "#eab308"
+                "var(--color-warning)"
             } else {
-                "#ef4444"
+                "var(--color-destructive)"
             };
             days.push((date_str, cals, pct, color.to_string()));
             cursor.set_date(cursor.get_date() - 1);
@@ -185,15 +183,6 @@ pub fn Dashboard() -> Element {
                                         span { class: "calorie-hero-value", "{total_cal:.0}" }
                                         span { class: "calorie-hero-target", "of {target_cal:.0} kcal" }
                                     }
-                                    div { class: "flex items-center gap-2 mt-2",
-                                        div { class: "macro-bar-track", style: "flex: 1",
-                                            div {
-                                                class: "macro-bar-fill bg-primary",
-                                                style: "width: {(total_cal / target_cal * 100.0).min(100.0):.0}%",
-                                            }
-                                        }
-                                        span { class: "text-xs font-medium tabular-nums", "{(total_cal / target_cal * 100.0):.0}%" }
-                                    }
                                     div { class: "calorie-hero-sparkline",
                                         div { class: "sparkline",
                                             for (_, _, pct, spark_color) in &week_spark {
@@ -204,14 +193,13 @@ pub fn Dashboard() -> Element {
                                             }
                                         }
                                     }
-                                    span { class: "text-xs text-muted-foreground", "Remaining: {remaining:.0} kcal" }
                                 }
                             }
                         }
                     }
                 }
 
-                div { class: "bento-grid",
+                div { class: "macro-grid",
                     MacroTile { label: "Protein", current: total_p, target: targets.protein_g, unit: "g", color: "bg-protein", text_color: "text-protein" }
                     MacroTile { label: "Carbs", current: total_c, target: targets.carbs_g, unit: "g", color: "bg-carbs", text_color: "text-carbs" }
                     MacroTile { label: "Fat", current: total_f, target: targets.fat_g, unit: "g", color: "bg-fat", text_color: "text-fat" }
@@ -255,13 +243,21 @@ pub fn Dashboard() -> Element {
 fn MacroTile(label: &'static str, current: f64, target: f64, unit: &'static str, color: &'static str, text_color: &'static str) -> Element {
     let pct = if target > 0.0 { (current / target * 100.0).min(100.0) } else { 0.0 };
     rsx! {
-        Card { size: CardSize::Sm,
-            CardContent { class: "text-center",
-                p { class: "text-xs text-muted-foreground uppercase tracking-wider", "{label}" }
-                p { class: "text-xl font-bold tabular-nums {text_color} mt-1", "{current:.0}" }
-                p { class: "text-xs text-muted-foreground", "/ {target:.0} {unit}" }
-                div { class: "macro-bar-track mt-2",
-                    div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+        Card {
+            CardContent { class: "macro-tile-content",
+                div { class: "macro-tile-header",
+                    div { class: "macro-tile-dot {color}" }
+                    span { class: "macro-tile-label", "{label}" }
+                }
+                div { class: "macro-tile-values",
+                    span { class: "macro-tile-current {text_color}", "{current:.0}" }
+                    span { class: "macro-tile-target", "/ {target:.0} {unit}" }
+                }
+                div { class: "macro-tile-bar-row",
+                    div { class: "macro-bar-track",
+                        div { class: "macro-bar-fill {color}", style: "width: {pct:.0}%" }
+                    }
+                    span { class: "macro-tile-pct", "{pct:.0}%" }
                 }
             }
         }
