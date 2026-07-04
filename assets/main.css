@@ -1185,7 +1185,6 @@ input::placeholder { color: var(--color-muted-foreground); }
 /* Bento hero card extra padding */
 .bento-hero .card-sm .card-content { padding: 20px 24px; }
 
-
 /* Macro Tile hover/press animations */
 .anim-macro-tile {
   will-change: transform;
