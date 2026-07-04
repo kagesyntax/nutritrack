@@ -14,6 +14,15 @@ NutriTrack helps you log meals, track daily nutrition, and analyze your eating h
 - Persistent offline-first storage
 - Responsive mobile-first UI with Tailwind CSS
 
+## Preview
+
+| Screen | View |
+|--------|------|
+| Home | ![Home](assets/preview/home.png) |
+| Log | ![Log](assets/preview/log.png) |
+| History | ![History](assets/preview/history.png) |
+| Analytics | ![Analytics](assets/preview/analystics.png) |
+
 ## Tech Stack
 
 - [Dioxus](https://dioxuslabs.com/) 0.7 — Rust-native UI framework
